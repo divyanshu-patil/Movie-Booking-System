@@ -1442,6 +1442,7 @@ public class App2 extends JFrame {
     JButton settings = new JButton("Settings");
 
     App2() {
+        this.setSize(600, 600);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Style.ColorConstants.BGCOLOR);

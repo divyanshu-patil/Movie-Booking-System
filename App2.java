@@ -2,9 +2,11 @@ import java.util.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import pkg.*;
 
 class Display {
@@ -1437,9 +1439,9 @@ class AppData extends Thread {
 
 public class App2 extends JFrame {
 
-    JButton login = new JButton("Login");
-    JButton signup = new JButton("Sign-up");
-    JButton settings = new JButton("Settings");
+    JButton login = Style.createButton("Login");
+    JButton signup = Style.createButton("Sign-up");
+    JButton settings = Style.createButton("Settings");
 
     App2() {
         this.setSize(600, 600);
@@ -1447,16 +1449,6 @@ public class App2 extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Style.ColorConstants.BGCOLOR);
         this.setTitle("INOX Theater");
-
-        login.setFont(new Font("Arial", Font.BOLD, 25));
-        login.setBackground(Style.ColorConstants.BTN_COLOR);
-        login.setForeground(Color.WHITE);
-        signup.setFont(new Font("Arial", Font.BOLD, 25));
-        signup.setBackground(Style.ColorConstants.BTN_COLOR);
-        signup.setForeground(Color.WHITE);
-        settings.setFont(new Font("Arial", Font.BOLD, 25));
-        settings.setBackground(Style.ColorConstants.BTN_COLOR);
-        settings.setForeground(Color.WHITE);
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridLayout(3, 1, 0, 20));

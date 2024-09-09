@@ -1,9 +1,31 @@
 package pkg;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.*;
 
 public class Style {
+
+    public static JButton createButton(String msg) {
+        JButton b = new JButton(msg);
+        b.setBackground(Style.ColorConstants.BTN_COLOR);
+        b.setFont(new Font("Arial", Font.BOLD, 25));
+        b.setForeground(Color.WHITE);
+        b.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                b.setBackground(Style.ColorConstants.LIGHTBLUE_COLOR);
+            }
+
+            public void mouseExited(MouseEvent e) {
+                b.setBackground(Style.ColorConstants.BTN_COLOR);
+
+            }
+        });
+
+        return b;
+    }
 
     public static void applyPercentageMargins(Component container, JPanel content, double horizontalPercent,
             double verticalPercent) {
@@ -44,7 +66,7 @@ public class Style {
         public static final Color BGCOLOR = new Color(38, 41, 43);
         public static final Color LIGHTBG_COLOR = new Color(46, 50, 57);
         public static final Color BTN_COLOR = new Color(95, 122, 219);
-        public static final Color LIGHTBLUE_COLOR = new Color(95, 122, 219);
+        public static final Color LIGHTBLUE_COLOR = new Color(162, 178, 238);
 
     }
 }

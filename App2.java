@@ -2,10 +2,6 @@ import java.util.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.*;
 import pkg.*;
 
@@ -1481,18 +1477,6 @@ public class App2 extends JFrame {
                 Style.applyPercentageSize(frame, title, 0.10, 0.20);
             }
         });
-        // JLabel wlcMsg = new JLabel("Welcome to INOX Theater");
-        // wlcMsg.setFont(new Font("Arial", Font.BOLD, 100));
-        // wlcMsg.setHorizontalAlignment(SwingConstants.CENTER);
-        // wlcMsg.setVerticalAlignment(SwingConstants.CENTER);
-        // wlcMsg.setForeground(Color.WHITE);
-
-        // JPanel center = new JPanel();
-        // center.setLayout(new BorderLayout());
-        // center.add(wlcMsg, BorderLayout.CENTER);
-        // center.setBackground(StyleConstants.BGCOLOR);
-        // center.setBorder(new EmptyBorder(0, 0, 200, 0));
-        // add(center, BorderLayout.CENTER);
 
     }
 

@@ -1448,8 +1448,7 @@ public class App2 extends JFrame {
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridLayout(3, 1, 0, 20));
-        sidePanel.add(login);
-        sidePanel.add(signup);
+        JApp.add(sidePanel, login, signup);
         // sidePanel.add(settings);
 
         sidePanel.setPreferredSize(new Dimension(300, 10));

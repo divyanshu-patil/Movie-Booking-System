@@ -1435,8 +1435,8 @@ class AppData extends Thread {
 
 public class App2 extends JFrame {
 
-    JButton login = Style.createButton("Login");
-    JButton signup = Style.createButton("Sign-up");
+    JButton loginbtn = Style.createButton("Login");
+    JButton signupbtn = Style.createButton("Sign-up");
     JButton settings = Style.createButton("Settings");
 
     App2() {
@@ -1448,7 +1448,7 @@ public class App2 extends JFrame {
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridLayout(3, 1, 0, 20));
-        JApp.add(sidePanel, login, signup);
+        JApp.add(sidePanel, loginbtn, signupbtn);
         // sidePanel.add(settings);
 
         sidePanel.setPreferredSize(new Dimension(300, 10));

@@ -4,7 +4,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
+
 import pkg.*;
 
 class Display {
@@ -380,11 +384,9 @@ class User implements Serializable {
     String testusername;
     static String Demi;
 
-    boolean getEmail() {
+    static boolean isEmail(String email) {
 
-        System.out.print("\t\t\t\t\t\tEnter Email address: ");
-
-        String s1 = in.next().trim();
+        String s1 = email.trim();
         boolean flag = true;
         int count1 = 0;
         int count2 = 0;
@@ -404,23 +406,7 @@ class User implements Serializable {
         if (count1 != 1 || count2 != 1 || space == true)
             flag = false;
 
-        if (flag) {
-            EmailAddress = s1;
-            return true;
-        }
-
-        else if (count1 == 0 || count2 == 0)
-            System.out.println("\t\t\t\t\t\tenter correct email address !");
-        else if (count1 != 1)
-            System.out.println("\t\t\t\t\t\tusername cannot contain '@' !");
-        else if (count2 != 1)
-            System.out.println("\t\t\t\t\t\tusername cannot contain period '.' !");
-        else if (space == true)
-            System.out.println("\t\t\t\t\t\temail cannot contain spaces  !");
-        else
-            System.out.println("\t\t\t\t\t\tenter correct email address !");
-
-        return false;
+        return flag;
     }
 
     void addUser(LinkedList<User> list) throws InterruptedException {
@@ -575,7 +561,7 @@ class User implements Serializable {
 
         boolean check_Email = false;
         while (!check_Email) {
-            check_Email = getEmail();
+            // check_Email = getEmail();
         }
 
     }
@@ -627,30 +613,30 @@ class User implements Serializable {
             if (flag) {
 
                 if (username.equals(obj.Username) && password.equals(obj.Password)) {// Checking Password
-                    Demi = username;
-                    Booking.ClearConsole();
-                    System.out.println();
-                    System.out.println();
-                    System.out
-                            .println("\t\t\t\t\t\t------  welcome " + obj.First_Name + " " + obj.Last_Name + " ------");
-                    Display.onUserLogin(list, m, obj.l, obj);// Showing The Option for Booking
+
                     return true;
                 } else {
                     System.out.println("\t\t\t\t\t\tinvalid details !");
-                    in.nextLine().trim();
-                    in.nextLine();
+
                     return false;
                 }
 
             } else {
                 System.out.println("\t\t\t\t\t\tUser not Found!");
                 System.out.println("\t\t\t\t\t\tEnter to Continue");
-                in.nextLine().trim();
-                in.nextLine();
                 return false;
 
             }
         }
+    }
+
+    static boolean isUserExists(LinkedList<User> list, String username) {
+        for (User u : list) {// using User LinkedList
+            if (u.Username != null && u.Username.equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 }// User Class Ended
 
@@ -1460,8 +1446,11 @@ class Panels {
             }
         });
         JApp.addListener("ActionListener", loginbtn, "Login", () -> {
-
             cardLayout.show(APP.getContentPane(), "Login");
+        });
+
+        JApp.addListener("ActionListener", signupbtn, "signup", () -> {
+            cardLayout.show(APP.getContentPane(), "Signup");
         });
 
         return loginPanel;
@@ -1475,13 +1464,14 @@ class Panels {
         JLabel Username = new JLabel("User Name");
         JLabel Password = new JLabel("Password");
         JButton UserLogin = Style.createButton("Login");
+        // UserLogin.setEnabled(false);
 
         JTextField usernamefield = new JTextField(15);
         JPasswordField pass = new JPasswordField(15);
 
         // Create inner panel with GridBagLayout
         JPanel innerpanel = new JPanel();
-        login.add(innerpanel, BorderLayout.CENTER); // Add innerpanel to panel1, using
+        login.add(innerpanel, BorderLayout.CENTER); // Add innerpanel to login, using
                                                     // BorderLayout.CENTER for
         // resizing
 
@@ -1508,7 +1498,7 @@ class Panels {
         g.gridheight = 2;
         g.fill = GridBagConstraints.HORIZONTAL;
         usernamefield.setPreferredSize(new Dimension(600, 100));
-        usernamefield.setFont(new Font("Arial", Font.PLAIN, 50));
+        usernamefield.setFont(new Font("Arial", Font.PLAIN, 30));
         innerpanel.add(usernamefield, g);
 
         g.gridx = 0;
@@ -1525,7 +1515,7 @@ class Panels {
         g.gridheight = 2;
         g.fill = GridBagConstraints.HORIZONTAL;
         pass.setPreferredSize(new Dimension(600, 100));
-        pass.setFont(new Font("Arial", Font.PLAIN, 50));
+        pass.setFont(new Font("Arial", Font.PLAIN, 30));
         innerpanel.add(pass, g);
 
         g.gridx = 0;
@@ -1536,18 +1526,208 @@ class Panels {
         UserLogin.setPreferredSize(new Dimension(600, 100));
         innerpanel.add(UserLogin, g);
 
+        JLabel l = new JLabel("fill details first");
+        l.setFont(new Font("Arial", Font.PLAIN, 24));
+        l.setForeground(Color.red);
+        g.gridx = 0;
+        g.gridy = 9;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        innerpanel.add(l, g);
+        l.setVisible(false);
         JApp.addListener("ActionListener", UserLogin, "Login", () -> {
-            try {
-                User.userLogin(list, m, usernamefield.getText().trim(), new String(pass.getPassword()).trim());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (!(usernamefield.getText().isEmpty()
+                    && new String(pass.getPassword()).isEmpty())) {
+
+                try {
+                    if (User.userLogin(list, m, usernamefield.getText().trim(),
+                            new String(pass.getPassword()).trim())) {
+                        System.out.println("user is present");
+                        usernamefield.setText("");
+                        pass.setText("");
+                        cardLayout.show(APP.getContentPane(), "Welcome");
+
+                    } else {
+                        System.out.println("user is absent");
+                        l.setText("User not found");
+                        l.setVisible(true);
+                    }
+                    System.out.println(usernamefield.getText().trim() + "\n" + new String(pass.getPassword()).trim());
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // cardLayout.show(APP.getContentPane(), "Welcome");
+            } else {
+
+                System.out.println("hello");
+                l.setText("fill all details");
+                l.setVisible(true);
             }
 
-            cardLayout.show(APP.getContentPane(), "Welcome");
         });
+
+        ImageIcon img = JApp.fitImage("assets/arrow-left.png", 50, 50);
+        JButton back = new JButton(img);
+        back.setPreferredSize(new Dimension(50, 50));
+        back.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.add(back);
+
+        p.setBackground(Style.ColorConstants.BGCOLOR);
+        login.add(p, BorderLayout.NORTH);
+
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(APP.getContentPane(), "Welcome");
+            }
+        });
+
         return login;
     }
 
+    public static JPanel signUpPanel(JFrame APP, LinkedList<User> list) {
+
+        JPanel userPanel = new JPanel(new GridLayout(2, 1));
+        JLabel userLabel = new JLabel("Username");
+        JTextField Username = new JTextField(20);
+        JApp.add(userPanel, userLabel, Username);
+
+        JPanel PassPanel = new JPanel(new GridLayout(2, 1));
+        JLabel PassLabel = new JLabel("Password");
+        JPasswordField Password = new JPasswordField(20);
+        JApp.add(PassPanel, PassLabel, Password);
+
+        JPanel ConfPassPanel = new JPanel(new GridLayout(2, 1));
+        JLabel ConfPassLabel = new JLabel("Confirm Password");
+        JPasswordField ConfPassword = new JPasswordField(20);
+        JApp.add(ConfPassPanel, ConfPassLabel, ConfPassword);
+
+        JPanel FNamePanel = new JPanel(new GridLayout(2, 1));
+        JLabel FNameLabel = new JLabel("First Name");
+        JTextField FName = new JTextField(20);
+        JApp.add(FNamePanel, FNameLabel, FName);
+
+        JPanel LNamePanel = new JPanel(new GridLayout(2, 1));
+        JLabel LNameLabel = new JLabel("Last Name");
+        JTextField LName = new JTextField(20);
+        JApp.add(LNamePanel, LNameLabel, LName);
+
+        JPanel EmailPanel = new JPanel(new GridLayout(2, 1));
+        JLabel EmailLabel = new JLabel("Email");
+        JTextField Email = new JTextField(20);
+        JApp.add(EmailPanel, EmailLabel, Email);
+
+        JPanel panels[] = { userPanel, PassPanel, ConfPassPanel, FNamePanel, LNamePanel, EmailPanel };
+        JLabel labels[] = { userLabel, PassLabel, ConfPassLabel, FNameLabel, LNameLabel, EmailLabel };
+        JTextComponent inputs[] = { Username, Password, ConfPassword, FName, LName, Email };
+        for (JLabel l : labels) {
+            l.setForeground(Color.WHITE);
+            l.setFont(new Font("Arial", Font.PLAIN, 24));
+        }
+        for (JPanel p : panels) {
+            p.setBackground(Style.ColorConstants.BGCOLOR);
+        }
+        for (JTextComponent p : inputs) {
+            p.setFont(new Font("Arial", Font.PLAIN, 28));
+        }
+
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new BorderLayout());
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridLayout(8, 1, 0, 20));
+
+        JButton submit = Style.createButton("Sign up");
+        JApp.add(sidePanel, userPanel, PassPanel, ConfPassPanel, FNamePanel, LNamePanel, EmailPanel, submit);
+
+        // sidePanel.add(settings);
+        sidePanel.setPreferredSize(new Dimension(500, 1000));
+        Style.applyPercentageMargins(loginPanel, sidePanel, 0.30, 0.05); // 10% margins
+
+        // add(sidePanel, BorderLayout.WEST);
+        loginPanel.add(sidePanel, BorderLayout.CENTER);
+
+        sidePanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        Label title = new Label("Signup");
+        Style.applyPercentageSize(loginPanel, title, 0.10, 0.10);
+        title.setAlignment(Label.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        loginPanel.add(title, BorderLayout.NORTH);
+        // Add a ComponentListener to handle resizing and adjust margins dynamically
+        loginPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(loginPanel, sidePanel, 0.30, 0.05); // 10% margins
+                Style.applyPercentageSize(loginPanel, title, 0.10, 0.10);
+            }
+        });
+        JLabel error = new JLabel("Fill all fields");
+        error.setFont(new Font("Arial", Font.PLAIN, 24));
+        error.setForeground(Color.RED);
+        error.setHorizontalAlignment(SwingConstants.CENTER);
+        sidePanel.add(error);
+        error.setVisible(false);
+
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!(Username.getText().trim().isEmpty() ||
+                        new String(Password.getPassword()).trim().isEmpty() ||
+                        new String(ConfPassword.getPassword()).trim().isEmpty() ||
+                        FName.getText().isEmpty() ||
+                        LName.getText().isEmpty() ||
+                        Email.getText().isEmpty())) {
+                    if (User.isUserExists(list, Username.getText())) {
+                        error.setText("Username already exists");
+                        error.setVisible(true);
+                    } else if (Username.getText().trim().equals("ADMIN") || Username.getText().trim().equals("Admin")
+                            || Username
+                                    .getText().equals("admin")) {
+                        error.setText("cant set username to " + Username.getText().trim());
+                        error.setVisible(true);
+                    } else if (!new String(Password.getPassword()).trim()
+                            .equals(new String(ConfPassword.getPassword()).trim())) {
+                        error.setText("Password and Confirm Password does'nt match");
+                        error.setVisible(true);
+
+                    } else if (JApp.containsDigit(FName.getText().trim()) || JApp
+                            .containsDigit(LName.getText().trim())) {
+                        error.setText("can't enter numbers in the name field");
+                        error.setVisible(true);
+
+                    } else if (!User.isEmail(Email.getText())) {
+                        error.setText("Enter valid email address");
+                        error.setVisible(true);
+                    } else {
+                        User user = new User();
+                        user.Username = Username.getText().trim();
+                        user.Password = new String(Password.getPassword()).trim();
+                        user.First_Name = FName.getText();
+                        user.Last_Name = LName.getText();
+                        user.EmailAddress = Email.getText();
+
+                        list.add(user);
+                        for (JTextComponent p : inputs) {
+                            p.setText("");
+                        }
+                        cardLayout.show(APP.getContentPane(), "Welcome");
+                        error.setVisible(false);
+                    }
+
+                } else {
+                    error.setVisible(true);
+                }
+            }
+        });
+        return loginPanel;
+
+    }
 }
 
 public class App2 extends JFrame {
@@ -1567,6 +1747,7 @@ public class App2 extends JFrame {
 
         add("Welcome", Panels.welcomePanel(this));
         add("Login", Panels.loginPanel(this, list, m));
+        add("Signup", Panels.signUpPanel(this, list));
 
     }
 

@@ -4,14 +4,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
-import javax.jws.soap.SOAPBinding.Use;
-import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import pkg.*;
 
@@ -153,7 +151,6 @@ class Display {
 
     static void loginPanel(LinkedList<User> list, LinkedList<Movies> m) throws InterruptedException {
         Booking.ClearConsole();
-        User user = new User();
         int choice = 0;
         do {
             Thread.sleep(200);
@@ -530,8 +527,6 @@ class User implements Serializable {
                 return true;
             } else {
                 System.out.println("\t\t\t\t\t\tWrong Password For ADMIN Login");
-                in.nextLine().trim();
-                in.nextLine();
             }
             return false;
         } else {
@@ -575,10 +570,11 @@ class Movies implements Serializable {
     static Scanner in = new Scanner(System.in);
     int seats[][] = new int[5][5];
 
-    int movie_code;
+    String movie_code;
     String movie_name;
     String Movie_date;
     String Time;
+    String img;
     int movie_price;
 
     void resetSeat(char ch) {
@@ -596,12 +592,11 @@ class Movies implements Serializable {
 
     }
 
-    void Add_Movies_List(LinkedList<Movies> m) throws InterruptedException {
+    void Add_Movies_List(LinkedList<Movies> m) {
         Movies Movie = new Movies();
         Movie.getDetails(m);
         m.add(Movie);
         System.out.println("Adding Movie");
-        Thread.sleep(1000);
         System.out.println("Movie successfully added !");
         System.out.print("Enter to Continue = ");
         in.nextLine().trim();
@@ -627,14 +622,14 @@ class Movies implements Serializable {
     }
 
     public static void remove_movie(LinkedList<Movies> m) {
-        int remove_code = 0;
+        String remove_code = "";
         boolean flag = false;
         Show_all_Movies(m);
         System.out.print("\t\t\t\t enter the  Movie code to remove movie = ");
         boolean checkint = false;
         while (!checkint) {
             try {
-                remove_code = in.nextInt();
+                remove_code = in.nextLine();
                 in.nextLine();
                 checkint = true;
 
@@ -667,8 +662,8 @@ class Movies implements Serializable {
 
     void getDetails(LinkedList<Movies> m) {
         boolean flag = false;
-        int testMovie_code;
-        testMovie_code = 0;
+        String testMovie_code;
+        testMovie_code = "";
         do {
             Booking.ClearConsole();
             System.out.println("\t\t\t\t------Fill Following Information to Create New Movie------\n\n");
@@ -677,7 +672,7 @@ class Movies implements Serializable {
                 System.out.print("\t\t\t\t\t\tEnter movie code: ");
                 checkint = false;
                 try {
-                    testMovie_code = in.nextInt();
+                    testMovie_code = in.nextLine();
                     in.nextLine();
                     checkint = true;
 
@@ -730,6 +725,14 @@ class Movies implements Serializable {
 
             }
         }
+    }
+
+    public static boolean isCodeExists(LinkedList<Movies> movies, String code) {
+        for (Movies m : movies) {
+            if (m.movie_code.equals(code))
+                return true;
+        }
+        return false;
     }
 
 }
@@ -841,7 +844,7 @@ class Ticket implements Serializable {
     // fields
     int tkt_no;
     long mobile_no;
-    int MovieCode;
+    String MovieCode;
 
     // String name = "user1";
     // String password = "111";
@@ -868,7 +871,7 @@ class Ticket implements Serializable {
         boolean checkint = false;
         while (!checkint) {
             try {
-                MovieCode = in.nextInt();
+                MovieCode = in.nextLine();
                 in.nextLine();
                 checkint = true;
             } catch (InputMismatchException e) {
@@ -1340,6 +1343,12 @@ class AppData {
 class Panels {
     public static CardLayout cardLayout = new CardLayout();
 
+    public static void clearInputs(JTextComponent... comp) {
+        for (JTextComponent c : comp) {
+            c.setText(null);
+        }
+    }
+
     public static JPanel welcomePanel(JPanel APP) {
         String thisPanelName = "Welcome";
 
@@ -1490,7 +1499,12 @@ class Panels {
                     && new String(pass.getPassword()).isEmpty())) {
 
                 try {
-                    if (User.userLogin(list, m, usernamefield.getText().trim(),
+                    if (Admin.checkAdminLogin(usernamefield.getText().trim(), new String(pass.getPassword()).trim())) {
+                        Panels.clearInputs(usernamefield, pass);
+                        AppData.page_history.push(thisPanelName);
+                        cardLayout.show(APP, "AdminHomePage");
+
+                    } else if (User.userLogin(list, m, usernamefield.getText().trim(),
                             new String(pass.getPassword()).trim())) {
                         System.out.println("user is present");
                         usernamefield.setText("");
@@ -1667,11 +1681,13 @@ class Panels {
 
     public static JPanel AdminHomePanel(JPanel APP, LinkedList<Movies> m, LinkedList<User> list) {
 
+        String thisPanelName = "AdminHomePage";
+
         JButton AddMoviebtn = Style.createButton("Add Movie");
         JButton RemoveMoviebtn = Style.createButton("Remove Movie");
         JButton SeeAllMoviesbtn = Style.createButton("See all Movies");
         JButton ViewAdminProfilebtn = Style.createButton("Profile");
-        JButton EditProfilebtn = Style.createButton("Edit Profile");
+        // JButton EditProfilebtn = Style.createButton("Edit Profile");
         JButton ViewAllUsersbtn = Style.createButton("View All Users");
 
         JPanel AdminHomePanel = new JPanel();
@@ -1691,7 +1707,224 @@ class Panels {
 
         InnerPanel.setBackground(Style.ColorConstants.BGCOLOR);
 
+        Label title = new Label("Welcome Admin");
+        Style.applyPercentageSize(AdminHomePanel, title, 0.10, 0.05);
+        title.setAlignment(Label.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        AdminHomePanel.add(title, BorderLayout.NORTH);
+        AdminHomePanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(AdminHomePanel, InnerPanel, 0.30, 0.05); // 10% margins
+                Style.applyPercentageSize(AdminHomePanel, title, 0.10, 0.15);
+            }
+        });
+
+        AddMoviebtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "AdminMovieADDPage");
+            }
+        });
         return AdminHomePanel;
+    }
+
+    public static JPanel AdminMovieAdd(JPanel APP, LinkedList<Movies> m) {
+        // String thisPanelName = "AdminMovieADDPage";
+
+        JPanel MovieCodePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieCodeLabel = new JLabel("Movie Code");
+        JTextField MovieCode = new JTextField();
+        MovieCodePanel.add(MovieCodeLabel);
+        MovieCodePanel.add(MovieCode);
+
+        JPanel MovieNamePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieNameLabel = new JLabel("Movie Name");
+        JTextField MovieName = new JTextField();
+        MovieNamePanel.add(MovieNameLabel);
+        MovieNamePanel.add(MovieName);
+
+        JPanel MovieDatePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieDateLabel = new JLabel("Movie Date");
+        JTextField MovieDate = new JTextField();
+        MovieDatePanel.add(MovieDateLabel);
+        MovieDatePanel.add(MovieDate);
+
+        JPanel MovieTimePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieTimeLabel = new JLabel("Movie Time");
+        JTextField MovieTime = new JTextField();
+        MovieTimePanel.add(MovieTimeLabel);
+        MovieTimePanel.add(MovieTime);
+
+        JPanel MoviePricePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MoviePriceLabel = new JLabel("Movie Price");
+        JTextField MoviePrice = new JTextField();
+        MoviePricePanel.add(MoviePriceLabel);
+        MoviePricePanel.add(MoviePrice);
+
+        JPanel panels[] = { MovieCodePanel, MovieNamePanel, MovieDatePanel, MovieTimePanel, MoviePricePanel };
+        JLabel labels[] = { MovieCodeLabel, MovieNameLabel, MovieDateLabel, MovieTimeLabel, MoviePriceLabel };
+        JTextComponent inputs[] = { MovieCode, MovieName, MovieDate, MovieTime, MoviePrice };
+        for (JLabel l : labels) {
+            l.setForeground(Color.WHITE);
+            l.setFont(new Font("Arial", Font.PLAIN, 24));
+        }
+        for (JPanel p : panels) {
+            p.setBackground(Style.ColorConstants.BGCOLOR);
+        }
+        for (JTextComponent p : inputs) {
+            p.setFont(new Font("Arial", Font.PLAIN, 28));
+        }
+
+        JPanel movieImagePanel = new JPanel(new BorderLayout());
+        movieImagePanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        // Setting up the GridBagLayout for the container
+        JPanel container = new JPanel(new GridBagLayout());
+        container.setBackground(Style.ColorConstants.BGCOLOR);
+        GridBagConstraints g = new GridBagConstraints();
+
+        // Remove unnecessary insets
+        g.insets = new Insets(0, 0, 0, 0);
+
+        // Image panel - occupies 8 blocks
+        g.gridx = 0;
+        g.gridy = 0;
+        g.gridheight = 8; // 8 blocks
+        g.weightx = 1.0; // Allow horizontal resizing
+        g.weighty = 8.0; // More vertical weight for the image
+        g.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
+        g.anchor = GridBagConstraints.NORTH; // Align image to the top
+        ImageIcon img = JApp.fitImage("assets/emptyimage.png", 600, 600);
+        JLabel image = new JLabel(img);
+        container.add(image, g);
+        image.setForeground(Color.white);
+
+        image.setBackground(Color.RED);
+
+        // Add Image button - occupies 2 blocks
+        g.gridx = 0;
+        g.gridy = 8;
+        g.gridheight = 2; // 2 blocks for button
+        g.weighty = 2.0; // Less vertical weight for button
+        g.fill = GridBagConstraints.BOTH; // Fill horizontally and vertically
+        g.anchor = GridBagConstraints.SOUTH; // Align button to the bottom
+        JButton AddImage = Style.createButton("Add Image");
+        container.add(AddImage, g);
+
+        // Adding the container to the movieImagePanel
+        movieImagePanel.add(container);
+
+        JPanel AddMoviePanel = new JPanel();
+        AddMoviePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        Style.applyPercentageSize(AddMoviePanel, movieImagePanel, 0.30, 0.10);
+        Style.applyPercentageMargins(AddMoviePanel, container, 0.20, 0.20);
+        AddMoviePanel.setLayout(new BorderLayout());
+        AddMoviePanel.add(movieImagePanel, BorderLayout.WEST);
+        JPanel InnerPanel = new JPanel();
+        InnerPanel.setLayout(new GridLayout(7, 1, 0, 20));
+        JButton AddMovie = Style.createButton("Add Movie");
+
+        JLabel error = new JLabel();
+        error.setFont(new Font("Arial", Font.PLAIN, 24));
+
+        error.setForeground(Color.RED);
+        error.setVisible(false);
+        JApp.add(InnerPanel, MovieCodePanel, MovieNamePanel, MovieDatePanel, MovieTimePanel, MoviePricePanel, AddMovie,
+                error);
+
+        // sidePanel.add(settings);
+        InnerPanel.setPreferredSize(new Dimension(500, 1000));
+        Style.applyPercentageMargins(AddMoviePanel, InnerPanel, 0.10, 0.10); // 10% margins
+
+        // add(sidePanel, BorderLayout.WEST);
+        AddMoviePanel.add(InnerPanel, BorderLayout.CENTER);
+
+        InnerPanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        Label title = new Label("Add Movie");
+        Style.applyPercentageSize(AddMoviePanel, title, 0.10, 0.05);
+        title.setAlignment(Label.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        AddMoviePanel.add(title, BorderLayout.NORTH);
+        AddMoviePanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(AddMoviePanel, InnerPanel, 0.10, 0.10); // 10% margins
+                Style.applyPercentageSize(AddMoviePanel, title, 0.10, 0.05);
+                Style.applyPercentageSize(AddMoviePanel, movieImagePanel, 0.30, 0.10);
+                Style.applyPercentageMargins(movieImagePanel, container, 0.10, 0.10);
+                Style.applyPercentageSize(container, image, 1, 1);
+
+            }
+        });
+        StringBuilder imagePath = new StringBuilder();
+        AddImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                chooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "gif"));
+                int result = chooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = chooser.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+                    ImageIcon img = JApp.fitImage(filePath, 400, 600);
+                    image.setIcon(img);
+                    imagePath.setLength(0); // Clear the previous path
+                    imagePath.append(filePath);
+                } else {
+                    // User canceled the dialog
+                }
+
+            }
+        });
+
+        AddMovie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Movies movie = new Movies();
+                if (Movies.isCodeExists(m, MovieCode.getText().trim())) {
+                    error.setText("enter unique movie code");
+                    error.setVisible(true);
+
+                } else if (MovieCode.getText().trim().isEmpty() ||
+                        MovieName.getText().trim().isEmpty() ||
+                        MovieDate.getText().trim().isEmpty() ||
+                        MoviePrice.getText().trim().isEmpty()) {
+                    error.setText("fill all fields");
+                    error.setVisible(true);
+                } else {
+
+                    try {
+                        int number = Integer.parseInt(MoviePrice.getText());
+                        movie.movie_code = MovieCode.getText().trim();
+                        movie.movie_name = MovieName.getText().trim();
+                        movie.Movie_date = MovieDate.getText().trim();
+                        movie.Time = MovieTime.getText().trim();
+                        movie.movie_price = number;
+
+                        movie.img = new String(imagePath);
+                        System.out.println(movie.img);
+                        m.add(movie);
+                        Panels.clearInputs(MovieCode, MovieName, MovieDate, MovieTime, MoviePrice);
+                        error.setVisible(false);
+                        cardLayout.show(APP, "AdminHomePage");
+
+                    } catch (Exception exp) {
+                        error.setText("enter valid number");
+                        error.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        return AddMoviePanel;
     }
 
     public static JPanel HomePanel(
@@ -1817,6 +2050,8 @@ public class App2 extends JFrame {
         mainPanel.add("Welcome", Panels.welcomePanel(mainPanel));
         mainPanel.add("Login", Panels.loginPanel(mainPanel, list, m));
         mainPanel.add("Signup", Panels.signUpPanel(mainPanel, list));
+        mainPanel.add("AdminHomePage", Panels.AdminHomePanel(mainPanel, m, list));
+        mainPanel.add("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
         mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
 
         back.addActionListener(new ActionListener() {

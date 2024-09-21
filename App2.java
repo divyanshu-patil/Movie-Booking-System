@@ -609,7 +609,6 @@ class User implements Serializable {
 
             if (Admin.checkAdminLogin(username, password)) {
 
-                Display.onAdminLogin(m, list);
                 return true;
             } else {
                 System.out.println("\t\t\t\t\t\tWrong Password For ADMIN Login");
@@ -1541,7 +1540,6 @@ class Panels {
             try {
                 User.userLogin(list, m, usernamefield.getText().trim(), new String(pass.getPassword()).trim());
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

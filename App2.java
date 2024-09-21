@@ -4,7 +4,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+
+import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import pkg.*;
 
 class Display {
@@ -367,7 +371,7 @@ class Admin {
 
 class User implements Serializable {
     static Scanner in = new Scanner(System.in);
-    LinkedList<Ticket> l = new LinkedList<Ticket>();
+    // LinkedList<Ticket> l = new LinkedList<Ticket>();
     static Console con = System.console();
     // fields
     String First_Name;
@@ -375,12 +379,22 @@ class User implements Serializable {
     String Mobile_No;
     String Username = null;
     String Password = null;
-    String EmailAddress = null;
-    String check_Password;
+    static String EmailAddress = null;
+    static String check_Password;
     String testusername;
     static String Demi;
 
-    boolean getEmail() {
+    User(){
+
+    }
+
+    User(LinkedList<User> user , String username , String pass, String FName){
+        this.Username = username;
+        this.Password = pass;
+        this.First_Name = FName;
+    }
+
+    static boolean getEmail() {
 
         System.out.print("\t\t\t\t\t\tEnter Email address: ");
 
@@ -580,7 +594,7 @@ class User implements Serializable {
 
     }
 
-    void myDetails() {
+   void myDetails() {
         Booking.ClearConsole();
         System.out.println("\t\t\t\t\t========================================");
 
@@ -633,7 +647,7 @@ class User implements Serializable {
                     System.out.println();
                     System.out
                             .println("\t\t\t\t\t\t------  welcome " + obj.First_Name + " " + obj.Last_Name + " ------");
-                    Display.onUserLogin(list, m, obj.l, obj);// Showing The Option for Booking
+                    // Display.onUserLogin(list, m, obj.l, obj);// Showing The Option for Booking
                     return true;
                 } else {
                     System.out.println("\t\t\t\t\t\tinvalid details !");
@@ -1460,8 +1474,9 @@ class Panels {
             }
         });
         JApp.addListener("ActionListener", loginbtn, "Login", () -> {
-
-            cardLayout.show(APP.getContentPane(), "Login");
+         
+            // cardLayout.show(APP.getContentPane(), "Login");
+            cardLayout.show(APP.getContentPane(), "Home Page");
         });
 
         return loginPanel;
@@ -1471,6 +1486,7 @@ class Panels {
         JPanel login = new JPanel();
         login.setLayout(new BorderLayout());
 
+       
         // Create components
         JLabel Username = new JLabel("User Name");
         JLabel Password = new JLabel("Password");
@@ -1539,14 +1555,108 @@ class Panels {
         JApp.addListener("ActionListener", UserLogin, "Login", () -> {
             try {
                 User.userLogin(list, m, usernamefield.getText().trim(), new String(pass.getPassword()).trim());
+              
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            cardLayout.show(APP.getContentPane(), "Welcome");
+            cardLayout.show(APP.getContentPane(), "Home Page");
         });
         return login;
     }
+
+
+    public static JPanel HomePanel(JFrame APP, LinkedList<User> list, LinkedList<Movies> m, LinkedList<Ticket> l, String name , User OBJ) {
+        JPanel Home = new JPanel();
+        Home.setLayout(new BorderLayout());
+        Home.setBackground(Style.ColorConstants.BGCOLOR);
+        Home.setBorder(new EmptyBorder(10, 20, 0, 20)); 
+    
+        JPanel NorthPanel = new JPanel();
+        NorthPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        NorthPanel.setLayout(new BorderLayout());  
+        NorthPanel.setPreferredSize(new Dimension(0,300));
+                  
+        Home.add(NorthPanel, "North");
+    
+        JLabel userName = new JLabel("Welcome " + " " + OBJ.First_Name);
+        userName.setHorizontalAlignment(JLabel.CENTER);
+        userName.setFont(new Font("Arial", Font.BOLD, 50));
+        userName.setBackground(Style.ColorConstants.BGCOLOR);
+        userName.setForeground(Color.WHITE);
+        NorthPanel.add(userName);
+    
+        JButton ProfileLogo = new JButton();
+        ProfileLogo.setBackground(Style.ColorConstants.BGCOLOR);
+        ProfileLogo.setIcon(JApp.fitImage("Img/profile.png", 200, 200));
+        ProfileLogo.setFocusPainted(false);
+        ProfileLogo.setBorder(null);
+        ProfileLogo.setContentAreaFilled(false);
+        ProfileLogo.setToolTipText("Click Here to See Profile ");
+        Style.applyPercentageMargins(ProfileLogo, NorthPanel, 0.30, 0.70); // 10% margins
+        
+        NorthPanel.add(ProfileLogo, BorderLayout.SOUTH);
+
+
+
+        JPanel CenterPanel = new JPanel();
+        CenterPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        CenterPanel.setLayout(new GridBagLayout());  
+
+
+        JButton addTicket = Style.createButton("Movies");
+        JButton cancleTicket = Style.createButton("Cancle Ticket");
+        JButton showTicket = Style.createButton("Show History");
+
+        GridBagConstraints g = new GridBagConstraints();
+
+        g.gridx = 0;
+        g.gridy = 0;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        addTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(addTicket,g);
+
+        g.gridx = 0;
+        g.gridy = 2;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        cancleTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(cancleTicket,g);
+
+
+        g.gridx = 0;
+        g.gridy = 3;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        showTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(showTicket,g);
+
+
+        Home.add(CenterPanel);
+
+
+
+        JApp.addListener("ActionListener", ProfileLogo, "ProfileLogo", () ->{
+            System.out.println("Heloo"); 
+        });
+        JApp.addListener("ActionListener", addTicket, "List", () ->{
+            System.out.println("Heloo"); 
+        });
+        JApp.addListener("ActionListener", cancleTicket, "cancleTicket", () ->{
+            System.out.println("Heloo"); 
+        });
+        JApp.addListener("ActionListener", showTicket, "showTicket", () ->{
+            System.out.println("Heloo"); 
+        });
+    
+        return Home;
+    }
+    
+
 
 }
 
@@ -1564,9 +1674,15 @@ public class App2 extends JFrame {
 
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
+        LinkedList<Ticket> l = new LinkedList<Ticket>();
+
+        User u = new User(list, "1", "1" , "Bhavesh");
+
+        list.add(u);
 
         add("Welcome", Panels.welcomePanel(this));
         add("Login", Panels.loginPanel(this, list, m));
+        add("Home Page", Panels.HomePanel(this, list, m, l , "BHAVESH",u));
 
     }
 

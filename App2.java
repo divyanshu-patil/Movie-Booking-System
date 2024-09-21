@@ -1,6 +1,8 @@
 import java.util.*;
 import java.io.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import javax.swing.*;
 import pkg.*;
@@ -1433,13 +1435,134 @@ class AppData extends Thread {
 
 }
 
+class Panels {
+    public static CardLayout cardLayout = new CardLayout();
+
+    public static JPanel welcomePanel(JFrame APP) {
+        JButton loginbtn = Style.createButton("Login");
+        JButton signupbtn = Style.createButton("Sign-up");
+        JButton settings = Style.createButton("Settings");
+
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new BorderLayout());
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridLayout(3, 1, 0, 20));
+
+        JApp.add(sidePanel, loginbtn, signupbtn);
+
+        // sidePanel.add(settings);
+
+        sidePanel.setPreferredSize(new Dimension(300, 10));
+        Style.applyPercentageMargins(loginPanel, sidePanel, 0.30, 0.20); // 10% margins
+
+        // add(sidePanel, BorderLayout.WEST);
+        loginPanel.add(sidePanel, BorderLayout.CENTER);
+
+        sidePanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        Label title = new Label("INOX Theater");
+        Style.applyPercentageSize(loginPanel, title, 0.10, 0.20);
+        title.setAlignment(Label.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        loginPanel.add(title, BorderLayout.NORTH);
+        // Add a ComponentListener to handle resizing and adjust margins dynamically
+        loginPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(loginPanel, sidePanel, 0.30, 0.20); // 10% margins
+                Style.applyPercentageSize(loginPanel, title, 0.10, 0.20);
+            }
+        });
+        JApp.addListener("ActionListener", loginbtn, "Login", () -> {
+            cardLayout.show(APP.getContentPane(), "Login");
+        });
+
+        return loginPanel;
+    }
+
+    public static JPanel loginPanel(JFrame APP) {
+        JPanel login = new JPanel();
+        login.setLayout(new BorderLayout());
+
+        // Create components
+        JLabel Username = new JLabel("User Name");
+        JLabel Password = new JLabel("Password");
+        JButton UserLogin = Style.createButton("Login");
+
+        JTextField usernamefield = new JTextField(15);
+        JPasswordField pass = new JPasswordField(15);
+
+        // Create inner panel with GridBagLayout
+        JPanel innerpanel = new JPanel();
+        login.add(innerpanel, BorderLayout.CENTER); // Add innerpanel to panel1, using
+                                                    // BorderLayout.CENTER for
+        // resizing
+
+        innerpanel.setLayout(new GridBagLayout()); // Use GridBagLayout for flexible component placement
+        innerpanel.setBackground(Style.ColorConstants.BGCOLOR); // Example background color
+
+        GridBagLayout layout = new GridBagLayout();
+
+        innerpanel.setLayout(layout);
+
+        GridBagConstraints g = new GridBagConstraints();
+
+        g.gridx = 0;
+        g.gridy = 0;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        Username.setForeground(Color.WHITE);
+        Username.setFont(new Font("Arial", Font.PLAIN, 30));
+        innerpanel.add(Username, g);
+
+        g.gridx = 0;
+        g.gridy = 1;
+        g.gridheight = 2;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        usernamefield.setPreferredSize(new Dimension(600, 100));
+        usernamefield.setFont(new Font("Arial", Font.PLAIN, 50));
+        innerpanel.add(usernamefield, g);
+
+        g.gridx = 0;
+        g.gridy = 5;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(30, 10, -20, 10);
+        Password.setForeground(Color.WHITE);
+        Password.setFont(new Font("Arial", Font.PLAIN, 30));
+        innerpanel.add(Password, g);
+
+        g.gridx = 0;
+        g.gridy = 6;
+        g.gridheight = 2;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        pass.setPreferredSize(new Dimension(600, 100));
+        pass.setFont(new Font("Arial", Font.PLAIN, 50));
+        innerpanel.add(pass, g);
+
+        g.gridx = 0;
+        g.gridy = 8;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.BOTH;
+        g.insets = new Insets(80, 10, 0, 10);
+        UserLogin.setPreferredSize(new Dimension(600, 100));
+        innerpanel.add(UserLogin, g);
+
+        JApp.addListener("ActionListener", UserLogin, "Login", () -> {
+            cardLayout.show(APP.getContentPane(), "Welcome");
+        });
+        return login;
+    }
+
+}
+
 public class App2 extends JFrame {
 
     // this is changes
-
-    JButton loginbtn = Style.createButton("Login");
-    JButton signupbtn = Style.createButton("Sign-up");
-    JButton settings = Style.createButton("Settings");
 
     App2() {
         this.setSize(600, 600);
@@ -1447,37 +1570,9 @@ public class App2 extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Style.ColorConstants.BGCOLOR);
         this.setTitle("INOX Theater");
-
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new GridLayout(3, 1, 0, 20));
-        JApp.add(sidePanel, loginbtn, signupbtn);
-        // sidePanel.add(settings);
-
-        sidePanel.setPreferredSize(new Dimension(300, 10));
-        Style.applyPercentageMargins(this, sidePanel, 0.30, 0.20); // 10% margins
-
-        App2 frame = this;
-
-        sidePanel.setBackground(Style.ColorConstants.BGCOLOR);
-
-        // add(sidePanel, BorderLayout.WEST);
-        add(sidePanel, BorderLayout.CENTER);
-
-        Label title = new Label("INOX Theater");
-        Style.applyPercentageSize(this, title, 0.10, 0.20);
-        title.setAlignment(Label.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 50));
-        title.setBackground(Style.ColorConstants.BGCOLOR);
-        title.setForeground(Color.WHITE);
-        add(title, BorderLayout.NORTH);
-        // Add a ComponentListener to handle resizing and adjust margins dynamically
-        this.addComponentListener(new java.awt.event.ComponentAdapter() {
-
-            public void componentResized(ComponentEvent e) {
-                Style.applyPercentageMargins(frame, sidePanel, 0.30, 0.20); // 10% margins
-                Style.applyPercentageSize(frame, title, 0.10, 0.20);
-            }
-        });
+        this.setLayout(Panels.cardLayout);
+        add("Welcome", Panels.welcomePanel(this));
+        add("Login", Panels.loginPanel(this));
 
     }
 

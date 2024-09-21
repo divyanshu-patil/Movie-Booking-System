@@ -179,7 +179,6 @@ class Display {
                     break;
 
                 case 1:
-                    user.userLogin(list, m);
                     break;
 
                 case 2:
@@ -601,27 +600,15 @@ class User implements Serializable {
 
     }
 
-    boolean userLogin(LinkedList<User> list, LinkedList<Movies> m) throws InterruptedException {
-        Booking.ClearConsole();
-        System.out.println();
-        System.out.println();
-        System.out.println("\t\t\t\t\t\t----Login Section-----");
-        System.out.println();
-        System.out.println();
+    static boolean userLogin(LinkedList<User> list, LinkedList<Movies> m, String username,
+            String password) throws InterruptedException {
         boolean flag = false;// use to hold value true if Given user name matches with the list username
         User obj = null;
 
-        System.out.print("\t\t\t\t\t\tEnter Username : ");
-        testusername = in.next().trim();
-        String testpassword;
-        // int choice;
-        if (Admin.checkAdminLoginUsername(testusername)) {
-            System.out.print("\t\t\t\t\t\tEnter Password : ");
-            char[] temp = con.readPassword();
-            String temp2String = new String(temp);
-            testpassword = temp2String.trim();
-            if (Admin.checkAdminLogin(testusername, testpassword)) {
-                Booking.ClearConsole();
+        if (Admin.checkAdminLoginUsername(username)) {
+
+            if (Admin.checkAdminLogin(username, password)) {
+
                 Display.onAdminLogin(m, list);
                 return true;
             } else {
@@ -632,19 +619,16 @@ class User implements Serializable {
             return false;
         } else {
             for (User u : list) {// using User LinkedList
-                flag = u.Username != null && u.Username.equals(testusername.trim());
+                flag = u.Username != null && u.Username.equals(username);
                 if (flag) {
                     obj = u;// Storing The user in Obj
                     break;
                 }
             }
             if (flag) {
-                System.out.print("\t\t\t\t\t\tEnter Password : ");
-                char[] temp = con.readPassword();
-                String temp2String = new String(temp);
-                testpassword = temp2String.trim();
-                if (testusername.equals(obj.Username) && testpassword.equals(obj.Password)) {// Checking Password
-                    Demi = testusername;
+
+                if (username.equals(obj.Username) && password.equals(obj.Password)) {// Checking Password
+                    Demi = username;
                     Booking.ClearConsole();
                     System.out.println();
                     System.out.println();
@@ -1477,13 +1461,14 @@ class Panels {
             }
         });
         JApp.addListener("ActionListener", loginbtn, "Login", () -> {
+
             cardLayout.show(APP.getContentPane(), "Login");
         });
 
         return loginPanel;
     }
 
-    public static JPanel loginPanel(JFrame APP) {
+    public static JPanel loginPanel(JFrame APP, LinkedList<User> list, LinkedList<Movies> m) {
         JPanel login = new JPanel();
         login.setLayout(new BorderLayout());
 
@@ -1553,6 +1538,13 @@ class Panels {
         innerpanel.add(UserLogin, g);
 
         JApp.addListener("ActionListener", UserLogin, "Login", () -> {
+            try {
+                User.userLogin(list, m, usernamefield.getText().trim(), new String(pass.getPassword()).trim());
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
             cardLayout.show(APP.getContentPane(), "Welcome");
         });
         return login;
@@ -1571,8 +1563,12 @@ public class App2 extends JFrame {
         this.setBackground(Style.ColorConstants.BGCOLOR);
         this.setTitle("INOX Theater");
         this.setLayout(Panels.cardLayout);
+
+        LinkedList<Movies> m = AppData.fetchMovieLinkedList();
+        LinkedList<User> list = AppData.fetchUserLinkedList();
+
         add("Welcome", Panels.welcomePanel(this));
-        add("Login", Panels.loginPanel(this));
+        add("Login", Panels.loginPanel(this, list, m));
 
     }
 

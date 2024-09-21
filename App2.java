@@ -1126,7 +1126,7 @@ class Booking {
 
 }
 
-class AppData extends Thread {
+class AppData {
     static Scanner in = new Scanner(System.in);
     static LinkedList<User> Userll;
     static LinkedList<Movies> Moviesll;
@@ -1136,6 +1136,8 @@ class AppData extends Thread {
     static ObjectOutputStream MovieOut;
     static ObjectOutputStream UserOut;
     static long SleepTime = 5000;
+
+    public static Stack<String> page_history = new Stack<String>();
 
     public AppData() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -1338,7 +1340,9 @@ class AppData extends Thread {
 class Panels {
     public static CardLayout cardLayout = new CardLayout();
 
-    public static JPanel welcomePanel(JFrame APP) {
+    public static JPanel welcomePanel(JPanel APP) {
+        String thisPanelName = "Welcome";
+
         JButton loginbtn = Style.createButton("Login");
         JButton signupbtn = Style.createButton("Sign-up");
         JButton settings = Style.createButton("homepage");
@@ -1377,25 +1381,32 @@ class Panels {
             }
         });
         JApp.addListener("ActionListener", loginbtn, "Login", () -> {
-            cardLayout.show(APP.getContentPane(), "Login");
+            AppData.page_history.push(thisPanelName);
+            cardLayout.show(APP, "Login");
 
         });
 
         JApp.addListener("ActionListener", signupbtn, "signup", () -> {
-            cardLayout.show(APP.getContentPane(), "Signup");
+
+            AppData.page_history.push(thisPanelName);
+            cardLayout.show(APP, "Signup");
         });
 
         settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(APP.getContentPane(), "Home Page");
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "Home Page");
 
             }
         });
         return loginPanel;
     }
 
-    public static JPanel loginPanel(JFrame APP, LinkedList<User> list, LinkedList<Movies> m) {
+    public static JPanel loginPanel(JPanel APP, LinkedList<User> list, LinkedList<Movies> m) {
+
+        String thisPanelName = "Login";
+
         JPanel login = new JPanel();
         login.setLayout(new BorderLayout());
 
@@ -1484,7 +1495,8 @@ class Panels {
                         System.out.println("user is present");
                         usernamefield.setText("");
                         pass.setText("");
-                        cardLayout.show(APP.getContentPane(), "Welcome");
+                        AppData.page_history.push(thisPanelName);
+                        cardLayout.show(APP, "Welcome");
 
                     } else {
                         System.out.println("user is absent");
@@ -1507,27 +1519,11 @@ class Panels {
 
         });
 
-        ImageIcon img = JApp.fitImage("assets/arrow-left.png", 50, 50);
-        JButton back = new JButton(img);
-        back.setPreferredSize(new Dimension(50, 50));
-        back.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        p.add(back);
-
-        p.setBackground(Style.ColorConstants.BGCOLOR);
-        login.add(p, BorderLayout.NORTH);
-
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(APP.getContentPane(), "Welcome");
-            }
-        });
-
         return login;
     }
 
-    public static JPanel signUpPanel(JFrame APP, LinkedList<User> list) {
+    public static JPanel signUpPanel(JPanel APP, LinkedList<User> list) {
+        String thisPanelName = "Signup";
 
         JPanel userPanel = new JPanel(new GridLayout(2, 1));
         JLabel userLabel = new JLabel("Username");
@@ -1655,7 +1651,8 @@ class Panels {
                         for (JTextComponent p : inputs) {
                             p.setText("");
                         }
-                        cardLayout.show(APP.getContentPane(), "Welcome");
+                        AppData.page_history.push(thisPanelName);
+                        cardLayout.show(APP, "Welcome");
                         error.setVisible(false);
                     }
 
@@ -1668,7 +1665,37 @@ class Panels {
 
     }
 
-    public static JPanel HomePanel(JFrame APP, LinkedList<User> list, LinkedList<Movies> m, LinkedList<Ticket> l,
+    public static JPanel AdminHomePanel(JPanel APP, LinkedList<Movies> m, LinkedList<User> list) {
+
+        JButton AddMoviebtn = Style.createButton("Add Movie");
+        JButton RemoveMoviebtn = Style.createButton("Remove Movie");
+        JButton SeeAllMoviesbtn = Style.createButton("See all Movies");
+        JButton ViewAdminProfilebtn = Style.createButton("Profile");
+        JButton EditProfilebtn = Style.createButton("Edit Profile");
+        JButton ViewAllUsersbtn = Style.createButton("View All Users");
+
+        JPanel AdminHomePanel = new JPanel();
+        AdminHomePanel.setLayout(new BorderLayout());
+
+        JPanel InnerPanel = new JPanel();
+        InnerPanel.setLayout(new GridLayout(5, 1, 0, 20));
+
+        JApp.add(InnerPanel, AddMoviebtn, RemoveMoviebtn, SeeAllMoviesbtn, ViewAdminProfilebtn, ViewAllUsersbtn);
+
+        // sidePanel.add(settings);
+        InnerPanel.setPreferredSize(new Dimension(500, 1000));
+        Style.applyPercentageMargins(AdminHomePanel, InnerPanel, 0.30, 0.05); // 10% margins
+
+        // add(sidePanel, BorderLayout.WEST);
+        AdminHomePanel.add(InnerPanel, BorderLayout.CENTER);
+
+        InnerPanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        return AdminHomePanel;
+    }
+
+    public static JPanel HomePanel(
+            JPanel APP, LinkedList<User> list, LinkedList<Movies> m, LinkedList<Ticket> l,
             String name, User OBJ) {
         JPanel Home = new JPanel();
         Home.setLayout(new BorderLayout());
@@ -1764,7 +1791,7 @@ public class App2 extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Style.ColorConstants.BGCOLOR);
         this.setTitle("INOX Theater");
-        this.setLayout(Panels.cardLayout);
+        this.setLayout(new BorderLayout());
 
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
@@ -1772,13 +1799,34 @@ public class App2 extends JFrame {
 
         User u = new User(list, "1", "1", "Bhavesh");
 
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(Panels.cardLayout);
+        add(mainPanel, BorderLayout.CENTER);
         list.add(u);
 
-        add("Welcome", Panels.welcomePanel(this));
-        add("Login", Panels.loginPanel(this, list, m));
-        add("Signup", Panels.signUpPanel(this, list));
-        add("Home Page", Panels.HomePanel(this, list, m, l, "BHAVESH", u));
+        ImageIcon img = JApp.fitImage("assets/arrow-left.png", 50, 50);
+        JButton back = new JButton(img);
+        back.setPreferredSize(new Dimension(50, 50));
+        back.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.add(back);
 
+        p.setBackground(Style.ColorConstants.BGCOLOR);
+        add(p, BorderLayout.NORTH);
+
+        mainPanel.add("Welcome", Panels.welcomePanel(mainPanel));
+        mainPanel.add("Login", Panels.loginPanel(mainPanel, list, m));
+        mainPanel.add("Signup", Panels.signUpPanel(mainPanel, list));
+        mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
+
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!AppData.page_history.isEmpty()) {
+                    Panels.cardLayout.show(mainPanel, AppData.page_history.pop());
+                }
+            }
+        });
     }
 
     static Scanner in = new Scanner(System.in);

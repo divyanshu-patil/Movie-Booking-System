@@ -1947,14 +1947,31 @@ public class App2 extends JFrame {
 
         list.add(u);
 
-        add("Welcome", Panels.welcomePanel(this));
-        add("Login", Panels.loginPanel(this, list, m));
-        add("Signup", Panels.signUpPanel(this, list));
-        add("Home Page", Panels.HomePanel(this, list, m, l, "BHAVESH", u));
-        add("Movies section", Panels.MoviePanel(this, m, l));
-        add("seat section", Panels.SeatPanel(this, m));
+   
+        ImageIcon img = JApp.fitImage("assets/arrow-left.png", 50, 50);
+        JButton back = new JButton(img);
+        back.setPreferredSize(new Dimension(50, 50));
+        back.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.add(back);
+
+        p.setBackground(Style.ColorConstants.BGCOLOR);
+        add(p, BorderLayout.NORTH);
+
+        mainPanel.add("Welcome", Panels.welcomePanel(mainPanel));
+        mainPanel.add("Login", Panels.loginPanel(mainPanel, list, m));
+        mainPanel.add("Signup", Panels.signUpPanel(mainPanel, list));
+        mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
 
 
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!AppData.page_history.isEmpty()) {
+                    Panels.cardLayout.show(mainPanel, AppData.page_history.pop());
+                }
+            }
+        });
     }
 
 

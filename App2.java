@@ -1435,6 +1435,8 @@ class AppData extends Thread {
 
 public class App2 extends JFrame {
 
+    // this is changes
+
     JButton loginbtn = Style.createButton("Login");
     JButton signupbtn = Style.createButton("Sign-up");
     JButton settings = Style.createButton("Settings");

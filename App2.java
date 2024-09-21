@@ -1348,7 +1348,15 @@ class AppData extends Thread {
 
 }
 
+
+
+
 class Panels {
+
+    private static JLabel MovieNameLabel = new JLabel();
+
+   
+
     public static CardLayout cardLayout = new CardLayout();
 
     public static JPanel welcomePanel(JFrame APP) {
@@ -1774,6 +1782,7 @@ class Panels {
         });
         JApp.addListener("ActionListener", back, "showTicket", () -> {
             cardLayout.show(APP.getContentPane(), "Welcome");
+            
         });
 
         return Home;
@@ -1842,8 +1851,11 @@ class Panels {
             priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
             movieCard.add(priceLabel, g);
 
-            JApp.addListener("MouseListener", movieCard, "Movie card", ()->{
-                System.out.println("click");
+            JApp.addListener("MouseListener", movieCard, movie.movie_name, ()->{
+               
+                MovieNameLabel.setText(movie.movie_name); 
+
+                cardLayout.show(APP.getContentPane(), "seat section");
 
             });
     
@@ -1856,8 +1868,41 @@ class Panels {
     
         return MoviePanel;
     }
+
+
+    public static JPanel SeatPanel(JFrame APP, LinkedList<Movies> movieList) {
+        JPanel seatsPanel = new JPanel();
+        seatsPanel.setLayout(new BorderLayout());
     
-public static class App2 extends JFrame {
+        JPanel NorthPanel = new JPanel();
+        NorthPanel.setLayout(new BorderLayout());
+    
+        // Add the movie name label
+        NorthPanel.add(MovieNameLabel, BorderLayout.NORTH);
+    
+        seatsPanel.add(NorthPanel, BorderLayout.NORTH);
+    
+        // Other seat panel components can go here
+    
+        return seatsPanel;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+    
+public class App2 extends JFrame {
 
     // this is changes
 
@@ -1907,8 +1952,13 @@ public static class App2 extends JFrame {
         add("Signup", Panels.signUpPanel(this, list));
         add("Home Page", Panels.HomePanel(this, list, m, l, "BHAVESH", u));
         add("Movies section", Panels.MoviePanel(this, m, l));
+        add("seat section", Panels.SeatPanel(this, m));
+
 
     }
+
+
+
 
     static Scanner in = new Scanner(System.in);
 
@@ -1971,5 +2021,4 @@ public static class App2 extends JFrame {
 
         // AutoSave.stopThread();
     }
-}
 }

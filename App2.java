@@ -195,7 +195,7 @@ class Display {
 
                 case 3:
                     Booking.ClearConsole();
-                    App2.Settings();
+                    // App2.Settings();
                     break;
 
                 default:
@@ -579,7 +579,20 @@ class Movies implements Serializable {
     String movie_name;
     String Movie_date;
     String Time;
-    int movie_price;
+    double movie_price;
+    String imagePath;
+
+    Movies(){
+        
+    }
+
+    public Movies(String name, String date, String time, double price, String imagePath) {
+        this.movie_name = name;
+        this.Movie_date = date;
+        this.Time = time;
+        this.movie_price = price;
+        this.imagePath = imagePath;
+    }
 
     void resetSeat(char ch) {
         char seat = 'A';
@@ -1682,6 +1695,17 @@ class Panels {
 
         Home.add(NorthPanel, "North");
 
+
+        ImageIcon img = JApp.fitImage("assets/arrow-left.png", 50, 50);
+        JButton back = new JButton(img);
+        back.setPreferredSize(new Dimension(50, 50));
+        back.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.add(back);
+
+        p.setBackground(Style.ColorConstants.BGCOLOR);
+        NorthPanel.add(p, BorderLayout.NORTH);
+
         JLabel userName = new JLabel("Welcome " + " " + OBJ.First_Name);
         userName.setHorizontalAlignment(JLabel.CENTER);
         userName.setFont(new Font("Arial", Font.BOLD, 50));
@@ -1740,7 +1764,7 @@ class Panels {
             System.out.println("Heloo");
         });
         JApp.addListener("ActionListener", addTicket, "List", () -> {
-            System.out.println("Heloo");
+            cardLayout.show(APP.getContentPane(), "Movies section");
         });
         JApp.addListener("ActionListener", cancleTicket, "cancleTicket", () -> {
             System.out.println("Heloo");
@@ -1748,13 +1772,92 @@ class Panels {
         JApp.addListener("ActionListener", showTicket, "showTicket", () -> {
             System.out.println("Heloo");
         });
+        JApp.addListener("ActionListener", back, "showTicket", () -> {
+            cardLayout.show(APP.getContentPane(), "Welcome");
+        });
 
         return Home;
     }
 
-}
+    public static JPanel MoviePanel(JFrame APP, LinkedList<Movies> movieList, LinkedList<Ticket> l) {
+        JPanel MoviePanel = new JPanel(new BorderLayout());
 
-public class App2 extends JFrame {
+        int col= 7;
+    
+   
+        
+        int rows = (int) Math.ceil((double) movieList.size() / col);
+
+        JPanel section = new JPanel(new GridLayout(rows, col, 15, 70)); 
+
+        section.setBorder(new EmptyBorder(100, 100, 100, 100));
+        section.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        for (Movies movie : movieList) {
+            JPanel movieCard = new JPanel();
+            movieCard.setLayout(new GridBagLayout());
+            GridBagConstraints g = new GridBagConstraints();
+            // movieCard.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+            movieCard.setBackground(Style.ColorConstants.BGCOLOR);
+    
+            g.gridx = 0;
+            g.gridy = 0;
+            g.gridheight = 1;
+            g.fill = GridBagConstraints.HORIZONTAL;
+            g.insets = new Insets(4, 10, 4, 10);
+            JLabel imgLabel = new JLabel(new ImageIcon(movie.imagePath));
+            imgLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            imgLabel.setForeground(Color.WHITE);
+            movieCard.add(imgLabel, g);
+    
+            // Add movie name
+            g.gridy = 1;
+            JLabel nameLabel = new JLabel(movie.movie_name);
+            nameLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            nameLabel.setForeground(Color.WHITE);
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            movieCard.add(nameLabel, g);
+    
+            // Add movie date
+            g.gridy = 2;
+            JLabel dateLabel = new JLabel("Date: " + movie.Movie_date);
+            dateLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            dateLabel.setForeground(Color.WHITE);
+            dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            movieCard.add(dateLabel, g);
+    
+            // Add movie time
+            g.gridy = 3;
+            JLabel timeLabel = new JLabel("Time: " + movie.Time);
+            timeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            timeLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            timeLabel.setForeground(Color.WHITE);
+            movieCard.add(timeLabel, g);
+    
+            // Add movie price
+            g.gridy = 4;
+            JLabel priceLabel = new JLabel("Price: $" + movie.movie_price);
+            priceLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            priceLabel.setForeground(Color.WHITE);
+            priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            movieCard.add(priceLabel, g);
+
+            JApp.addListener("MouseListener", movieCard, "Movie card", ()->{
+                System.out.println("click");
+
+            });
+    
+            // Add the movie card to the section panel
+            section.add(movieCard);
+        }
+    
+        // Add section to a scroll pane for scrolling support
+        MoviePanel.add(new JScrollPane(section), BorderLayout.CENTER);
+    
+        return MoviePanel;
+    }
+    
+public static class App2 extends JFrame {
 
     // this is changes
 
@@ -1771,6 +1874,31 @@ public class App2 extends JFrame {
         LinkedList<Ticket> l = new LinkedList<Ticket>();
 
         User u = new User(list, "1", "1", "Bhavesh");
+       Movies m1 = new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg");
+       Movies m2 = new Movies("Spider-Man", "2024-09-22", "20:00", 12.50, "Img/Avengers.jpeg");
+        m.add(m1);
+        m.add(m2);
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
+        m.add(new Movies("Avengers", "2024-09-21", "18:00", 15.99, "Img/Avengers.jpeg"));
 
         list.add(u);
 
@@ -1778,6 +1906,7 @@ public class App2 extends JFrame {
         add("Login", Panels.loginPanel(this, list, m));
         add("Signup", Panels.signUpPanel(this, list));
         add("Home Page", Panels.HomePanel(this, list, m, l, "BHAVESH", u));
+        add("Movies section", Panels.MoviePanel(this, m, l));
 
     }
 
@@ -1813,7 +1942,7 @@ public class App2 extends JFrame {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
         // Booking b = new Booking();
         // b.Show_Ticket();
 
@@ -1823,6 +1952,8 @@ public class App2 extends JFrame {
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
 
+        
+
         // AppData AutoSave = new AppData();
 
         // AutoSave.setName("AutoSave Thread");
@@ -1830,7 +1961,7 @@ public class App2 extends JFrame {
         // AutoSave.start();
 
         // Movies movie = new Movies();
-        Display.loginPanel(list, m);
+        // Display.loginPanel(list, m);
 
         AppData.StoreMovieLinkedList(m);
         // System.out.println("movies data saved sucessfully");
@@ -1840,4 +1971,5 @@ public class App2 extends JFrame {
 
         // AutoSave.stopThread();
     }
+}
 }

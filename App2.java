@@ -9,6 +9,10 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
+import javax.jws.soap.SOAPBinding.Use;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import pkg.*;
 
 class Display {
@@ -186,7 +190,7 @@ class Display {
                     break;
 
                 case 2:
-                    user.addUser(list);
+
                     break;
 
                 case 3:
@@ -371,7 +375,7 @@ class Admin {
 
 class User implements Serializable {
     static Scanner in = new Scanner(System.in);
-    LinkedList<Ticket> l = new LinkedList<Ticket>();
+    // LinkedList<Ticket> l = new LinkedList<Ticket>();
     static Console con = System.console();
     // fields
     String First_Name;
@@ -380,9 +384,18 @@ class User implements Serializable {
     String Username = null;
     String Password = null;
     String EmailAddress = null;
-    String check_Password;
+
     String testusername;
-    static String Demi;
+
+    User() {
+
+    }
+
+    User(LinkedList<User> user, String username, String pass, String FName) {
+        this.Username = username;
+        this.Password = pass;
+        this.First_Name = FName;
+    }
 
     static boolean isEmail(String email) {
 
@@ -407,18 +420,6 @@ class User implements Serializable {
             flag = false;
 
         return flag;
-    }
-
-    void addUser(LinkedList<User> list) throws InterruptedException {
-        User user = new User();
-        user.signIn(list);
-        list.add(user);
-        // Thread.sleep(500);
-        System.out.println("\t\t\t\t\t\tuser successfully added !");
-        System.out.print("\t\t\t\t\t\tEnter to Continue = ");
-        in.nextLine().trim();
-        in.nextLine().trim();
-
     }
 
     void changeUserDetails() {
@@ -497,75 +498,6 @@ class User implements Serializable {
         }
     }
 
-    void signIn(LinkedList<User> list) {
-        boolean flag = false;
-        String testUsername = null;
-        do {
-            Booking.ClearConsole();
-            System.out.println();
-            System.out.println();
-            System.out.println("\t\t\t\t------Fill Following Information to Create New Account------");
-            System.out.println();
-            System.out.println();
-
-            System.out.print("\t\t\t\t\t\tEnter User Name: ");
-            testUsername = in.next().trim();
-            flag = false;
-
-            for (User test : list) {
-                if (test.Username.equals(testUsername)) {
-                    System.out.println(
-                            "\t\t\t\t\tUser With Username " + testUsername
-                                    + " Already Exists\n\t\t\t\t\tChoose Another Username !");
-                    in.nextLine().trim();
-                    in.nextLine();
-                    flag = true;
-                    break;
-
-                }
-            }
-            if (!flag) {
-                Username = testUsername;
-                flag = false;
-                break;
-            }
-
-        } while (flag);
-        do {
-
-            System.out.print("\t\t\t\t\t\tEnter Password: ");
-            char[] temp = con.readPassword();
-            String temp2String = new String(temp);
-            Password = temp2String.trim();
-
-            System.out.print("\t\t\t\t\t\tConfirm Password: ");
-            temp = con.readPassword();
-            temp2String = new String(temp);
-            check_Password = temp2String.trim();
-
-            if (Password.equals(check_Password) == false) {
-                System.out.println("\t\t\t\t\t\tEnter correct password: ");
-
-            }
-        } while (Password.equals(check_Password) == false);
-
-        System.out.print("\t\t\t\t\t\tEnter Firstname: ");
-        First_Name = in.next().trim();
-        First_Name = First_Name.trim();
-        System.out.print("\t\t\t\t\t\tEnter LastName: ");
-        Last_Name = in.next().trim();
-        Last_Name = Last_Name.trim();
-
-        System.out.print("\t\t\t\t\t\tEnter mobile no: ");
-        Mobile_No = in.next().trim();
-
-        boolean check_Email = false;
-        while (!check_Email) {
-            // check_Email = getEmail();
-        }
-
-    }
-
     void myDetails() {
         Booking.ClearConsole();
         System.out.println("\t\t\t\t\t========================================");
@@ -613,7 +545,6 @@ class User implements Serializable {
             if (flag) {
 
                 if (username.equals(obj.Username) && password.equals(obj.Password)) {// Checking Password
-
                     return true;
                 } else {
                     System.out.println("\t\t\t\t\t\tinvalid details !");
@@ -1410,7 +1341,7 @@ class Panels {
     public static JPanel welcomePanel(JFrame APP) {
         JButton loginbtn = Style.createButton("Login");
         JButton signupbtn = Style.createButton("Sign-up");
-        JButton settings = Style.createButton("Settings");
+        JButton settings = Style.createButton("homepage");
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BorderLayout());
@@ -1418,7 +1349,7 @@ class Panels {
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridLayout(3, 1, 0, 20));
 
-        JApp.add(sidePanel, loginbtn, signupbtn);
+        JApp.add(sidePanel, loginbtn, signupbtn, settings);
 
         // sidePanel.add(settings);
 
@@ -1447,12 +1378,20 @@ class Panels {
         });
         JApp.addListener("ActionListener", loginbtn, "Login", () -> {
             cardLayout.show(APP.getContentPane(), "Login");
+
         });
 
         JApp.addListener("ActionListener", signupbtn, "signup", () -> {
             cardLayout.show(APP.getContentPane(), "Signup");
         });
 
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(APP.getContentPane(), "Home Page");
+
+            }
+        });
         return loginPanel;
     }
 
@@ -1728,6 +1667,91 @@ class Panels {
         return loginPanel;
 
     }
+
+    public static JPanel HomePanel(JFrame APP, LinkedList<User> list, LinkedList<Movies> m, LinkedList<Ticket> l,
+            String name, User OBJ) {
+        JPanel Home = new JPanel();
+        Home.setLayout(new BorderLayout());
+        Home.setBackground(Style.ColorConstants.BGCOLOR);
+        Home.setBorder(new EmptyBorder(10, 20, 0, 20));
+
+        JPanel NorthPanel = new JPanel();
+        NorthPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        NorthPanel.setLayout(new BorderLayout());
+        NorthPanel.setPreferredSize(new Dimension(0, 300));
+
+        Home.add(NorthPanel, "North");
+
+        JLabel userName = new JLabel("Welcome " + " " + OBJ.First_Name);
+        userName.setHorizontalAlignment(JLabel.CENTER);
+        userName.setFont(new Font("Arial", Font.BOLD, 50));
+        userName.setBackground(Style.ColorConstants.BGCOLOR);
+        userName.setForeground(Color.WHITE);
+        NorthPanel.add(userName);
+
+        JButton ProfileLogo = new JButton();
+        ProfileLogo.setBackground(Style.ColorConstants.BGCOLOR);
+        ProfileLogo.setIcon(JApp.fitImage("Img/profile.png", 200, 200));
+        ProfileLogo.setFocusPainted(false);
+        ProfileLogo.setBorder(null);
+        ProfileLogo.setContentAreaFilled(false);
+        ProfileLogo.setToolTipText("Click Here to See Profile ");
+        Style.applyPercentageMargins(ProfileLogo, NorthPanel, 0.30, 0.70); // 10% margins
+
+        NorthPanel.add(ProfileLogo, BorderLayout.SOUTH);
+
+        JPanel CenterPanel = new JPanel();
+        CenterPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        CenterPanel.setLayout(new GridBagLayout());
+
+        JButton addTicket = Style.createButton("Movies");
+        JButton cancleTicket = Style.createButton("Cancle Ticket");
+        JButton showTicket = Style.createButton("Show History");
+
+        GridBagConstraints g = new GridBagConstraints();
+
+        g.gridx = 0;
+        g.gridy = 0;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        addTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(addTicket, g);
+
+        g.gridx = 0;
+        g.gridy = 2;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        cancleTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(cancleTicket, g);
+
+        g.gridx = 0;
+        g.gridy = 3;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        showTicket.setPreferredSize(new Dimension(500, 100));
+        CenterPanel.add(showTicket, g);
+
+        Home.add(CenterPanel);
+
+        JApp.addListener("ActionListener", ProfileLogo, "ProfileLogo", () -> {
+            System.out.println("Heloo");
+        });
+        JApp.addListener("ActionListener", addTicket, "List", () -> {
+            System.out.println("Heloo");
+        });
+        JApp.addListener("ActionListener", cancleTicket, "cancleTicket", () -> {
+            System.out.println("Heloo");
+        });
+        JApp.addListener("ActionListener", showTicket, "showTicket", () -> {
+            System.out.println("Heloo");
+        });
+
+        return Home;
+    }
+
 }
 
 public class App2 extends JFrame {
@@ -1744,10 +1768,16 @@ public class App2 extends JFrame {
 
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
+        LinkedList<Ticket> l = new LinkedList<Ticket>();
+
+        User u = new User(list, "1", "1", "Bhavesh");
+
+        list.add(u);
 
         add("Welcome", Panels.welcomePanel(this));
         add("Login", Panels.loginPanel(this, list, m));
         add("Signup", Panels.signUpPanel(this, list));
+        add("Home Page", Panels.HomePanel(this, list, m, l, "BHAVESH", u));
 
     }
 

@@ -64,4 +64,5 @@ public class JApp {
 
         return new ImageIcon(scaledImage);
     }
+
 }

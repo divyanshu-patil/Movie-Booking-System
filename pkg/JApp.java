@@ -50,4 +50,15 @@ public class JApp {
                 throw new IllegalArgumentException("Unsupported listener type: " + listenerType);
         }
     }
+
+    public static ImageIcon fitImage(String imgPath, int width, int height) {
+        
+        ImageIcon imageIcon = new ImageIcon(imgPath);
+    
+        Image img = imageIcon.getImage();
+           Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+        return new ImageIcon(scaledImage);
+    }
+
 }

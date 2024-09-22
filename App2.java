@@ -13,6 +13,12 @@ import javax.swing.text.JTextComponent;
 import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.*;
 import javax.swing.border.*;
+import javafx.scene.control.ScrollToEvent;
+import javafx.scene.layout.Pane;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import pkg.*;
 
@@ -2111,6 +2117,7 @@ public class App2 extends JFrame {
         Movies m2 = new Movies("Spider-Man", "2024-09-22", "20:00", 12.50, "Movie-Booking-System/Img/Avengers.jpeg");
          m.add(m1);
          m.add(m2);
+
 
  
  

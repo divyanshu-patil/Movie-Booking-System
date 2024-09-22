@@ -4,14 +4,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
+import javafx.scene.control.ScrollToEvent;
+import javafx.scene.layout.Pane;
+
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import pkg.*;
+import pkg.JApp.WrapLayout;
 
 class Display {
     static Scanner in = new Scanner(System.in);
@@ -735,6 +742,14 @@ class Movies implements Serializable {
         return false;
     }
 
+    public static Movies getMovieObj(LinkedList<Movies> movies, String code) {
+        for (Movies m : movies) {
+            if (m.movie_code.equals(code))
+                return m;
+        }
+        return null;
+    }
+
 }
 
 class Seat_Check {
@@ -1342,6 +1357,11 @@ class AppData {
 
 class Panels {
     public static CardLayout cardLayout = new CardLayout();
+    private static HashMap<String, JPanel> componentsMap = new HashMap<>();
+
+    public static void updateHashMap(HashMap<String, JPanel> newcomponentsMap) {
+        componentsMap = newcomponentsMap;
+    }
 
     public static void clearInputs(JTextComponent... comp) {
         for (JTextComponent c : comp) {
@@ -1729,6 +1749,14 @@ class Panels {
                 cardLayout.show(APP, "AdminMovieADDPage");
             }
         });
+        RemoveMoviebtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "RemoveMovie");
+
+            }
+        });
         return AdminHomePanel;
     }
 
@@ -1896,7 +1924,7 @@ class Panels {
                 } else if (MovieCode.getText().trim().isEmpty() ||
                         MovieName.getText().trim().isEmpty() ||
                         MovieDate.getText().trim().isEmpty() ||
-                        MoviePrice.getText().trim().isEmpty()) {
+                        MoviePrice.getText().trim().isEmpty() || imagePath.length() == 0) {
                     error.setText("fill all fields");
                     error.setVisible(true);
                 } else {
@@ -1913,11 +1941,34 @@ class Panels {
                         System.out.println(movie.img);
                         m.add(movie);
                         Panels.clearInputs(MovieCode, MovieName, MovieDate, MovieTime, MoviePrice);
+                        ImageIcon ico = JApp.fitImage("assets/emptyimage.png", 600, 600);
+                        image.setIcon(ico);
+                        AppData.StoreMovieLinkedList(m);
                         error.setVisible(false);
+
+                        // Remove the old panel
+                        JPanel oldPanel = componentsMap.get("RemoveMovie");
+                        APP.remove(oldPanel);
+                        componentsMap.remove("RemoveMovie");
+
+                        // Create a new panel
+                        JPanel newPanel = Panels.RemoveMoviePanel(APP, m);
+
+                        // Add the new panel to the mainPanel
+                        APP.add("RemoveMovie", newPanel);
+
+                        // Put the new panel in the componentsMap
+                        componentsMap.put("RemoveMovie", newPanel);
+
+                        // Update the layout
+                        APP.revalidate();
+                        APP.repaint();
+
                         cardLayout.show(APP, "AdminHomePage");
 
                     } catch (Exception exp) {
                         error.setText("enter valid number");
+                        System.out.println(exp);
                         error.setVisible(true);
                     }
                 }
@@ -1925,6 +1976,112 @@ class Panels {
         });
 
         return AddMoviePanel;
+    }
+
+    public static JPanel RemoveMoviePanel(JPanel APP, LinkedList<Movies> m) {
+
+        String thisPanelName = "RemoveMovie";
+        JPanel RemovePanel = new JPanel(new BorderLayout());
+        JPanel InnerPanel = new JPanel(new JApp.WrapLayout(FlowLayout.LEFT, 10, 20));
+        JPanel MoviePanel = new JPanel(new BorderLayout());
+        JScrollPane ScrollPane = new JScrollPane(InnerPanel);
+        JLabel title = new JLabel("Remove Movie");
+        RemovePanel.add(title, BorderLayout.NORTH);
+
+        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.20, 0.20);
+        Style.applyPercentageSize(RemovePanel, title, 0.20, 0.03);
+        title.setFont(new Font("Arial", Font.PLAIN, 35));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        InnerPanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        MoviePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        RemovePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        MoviePanel.add(ScrollPane);
+        RemovePanel.add(MoviePanel);
+
+        JButton Removebtn = Style.createButton("Remove Selected Movies", Color.RED);
+        JPanel btnPanel = new JPanel();
+        btnPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        btnPanel.add(Removebtn);
+        RemovePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        // btnPanel.setBackground(Color.CYAN);
+        Removebtn.setPreferredSize(new Dimension(500, 60));
+        RemovePanel.add(btnPanel, BorderLayout.SOUTH);
+        // Style.applyPercentageSize(btnPanel, Removebtn, 0.60, 1);
+        Vector<String> SelectedMovies = new Vector<>();
+        for (Movies s : m) {
+            JPanel b = new JPanel();
+            b.setLayout(new BorderLayout());
+            ImageIcon ico = JApp.fitImage(s.img, 300, 600);
+            JButton imagePanel = new JButton(ico);
+            imagePanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+
+            b.setBorder(BorderFactory.createLineBorder(Style.ColorConstants.LIGHTBG_COLOR, 10));
+            b.add(imagePanel);
+            InnerPanel.add(b);
+            b.setPreferredSize(new Dimension(300, 400));
+
+            imagePanel.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(s.movie_name);
+                    Color c = ((LineBorder) b.getBorder()).getLineColor();
+                    if (c != Color.RED) {
+                        SelectedMovies.add(s.movie_code);
+                        b.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+                    } else {
+                        SelectedMovies.remove(s.movie_code);
+                        b.setBorder(BorderFactory.createLineBorder(Style.ColorConstants.LIGHTBG_COLOR, 10));
+                    }
+
+                }
+            });
+
+        }
+        Removebtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (String s : SelectedMovies) {
+                    m.remove(Movies.getMovieObj(m, s));
+
+                }
+                // Remove the old panel
+                JPanel oldPanel = componentsMap.get("RemoveMovie");
+                APP.remove(oldPanel);
+                componentsMap.remove("RemoveMovie");
+
+                // Create a new panel
+                JPanel newPanel = Panels.RemoveMoviePanel(APP, m);
+
+                // Add the new panel to the mainPanel
+                APP.add("RemoveMovie", newPanel);
+
+                // Put the new panel in the componentsMap
+                componentsMap.put("RemoveMovie", newPanel);
+
+                // Update the layout
+                APP.revalidate();
+                APP.repaint();
+
+                cardLayout.show(APP, thisPanelName);
+            }
+
+        });
+
+        RemovePanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.05, 0.05); // 10% margins
+                Style.applyPercentageSize(RemovePanel, title, 0.20, 0.05);
+
+            }
+        });
+        return RemovePanel;
     }
 
     public static JPanel HomePanel(
@@ -2015,6 +2172,7 @@ class Panels {
 }
 
 public class App2 extends JFrame {
+    private static HashMap<String, JPanel> componentsMap = new HashMap<>();
 
     // this is changes
 
@@ -2025,7 +2183,7 @@ public class App2 extends JFrame {
         this.setBackground(Style.ColorConstants.BGCOLOR);
         this.setTitle("INOX Theater");
         this.setLayout(new BorderLayout());
-
+        Panels.updateHashMap(componentsMap);
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
         LinkedList<Ticket> l = new LinkedList<Ticket>();
@@ -2048,11 +2206,26 @@ public class App2 extends JFrame {
         add(p, BorderLayout.NORTH);
 
         mainPanel.add("Welcome", Panels.welcomePanel(mainPanel));
+        componentsMap.put("Welcome", Panels.welcomePanel(mainPanel));
+
         mainPanel.add("Login", Panels.loginPanel(mainPanel, list, m));
+        componentsMap.put("Login", Panels.loginPanel(mainPanel, list, m));
+
         mainPanel.add("Signup", Panels.signUpPanel(mainPanel, list));
+        componentsMap.put("Signup", Panels.signUpPanel(mainPanel, list));
+
         mainPanel.add("AdminHomePage", Panels.AdminHomePanel(mainPanel, m, list));
+        componentsMap.put("AdminHomePage", Panels.AdminHomePanel(mainPanel, m, list));
+
         mainPanel.add("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
+        componentsMap.put("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
+
+        mainPanel.add("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
+        componentsMap.put("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
+        // Panels.cardLayout.show(mainPanel, "RemoveMovie");
+
         mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
+        componentsMap.put("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
 
         back.addActionListener(new ActionListener() {
             @Override
@@ -2060,6 +2233,17 @@ public class App2 extends JFrame {
                 if (!AppData.page_history.isEmpty()) {
                     Panels.cardLayout.show(mainPanel, AppData.page_history.pop());
                 }
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                AppData.StoreMovieLinkedList(m);
+                System.out.println("movies data saved sucessfully");
+
+                AppData.StoreUserLinkedList(list);
+                System.out.println("user data saved succesfully");
             }
         });
     }

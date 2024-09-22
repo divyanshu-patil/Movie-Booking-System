@@ -27,6 +27,15 @@ public class Style {
         return b;
     }
 
+    public static JButton createButton(String msg, Color c) {
+        JButton b = new JButton(msg);
+        b.setBackground(c);
+        b.setFont(new Font("Arial", Font.BOLD, 25));
+        b.setForeground(Color.WHITE);
+
+        return b;
+    }
+
     public static void applyPercentageMargins(Component container, JPanel content, double horizontalPercent,
             double verticalPercent) {
         // Calculate margins based on container size

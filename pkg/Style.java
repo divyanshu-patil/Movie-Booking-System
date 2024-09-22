@@ -67,6 +67,7 @@ public class Style {
         public static final Color LIGHTBG_COLOR = new Color(46, 50, 57);
         public static final Color BTN_COLOR = new Color(95, 122, 219);
         public static final Color LIGHTBLUE_COLOR = new Color(162, 178, 238);
+        public static final Color GRAY_COLOR = new Color(238,238,238);
 
     }
 }

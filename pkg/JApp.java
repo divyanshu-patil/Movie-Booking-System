@@ -19,6 +19,7 @@ public class JApp {
                     ((AbstractButton) component).addActionListener(e -> {
                         System.out.println("ActionListener triggered with data: " + data);
                         action.run(); // Perform the specified action
+
                     });
                 } else {
                     throw new IllegalArgumentException(

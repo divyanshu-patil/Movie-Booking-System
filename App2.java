@@ -2093,7 +2093,7 @@ class Panels {
     }
 
     public static JPanel AdminViewAllUsersPanel(JPanel APP, LinkedList<User> u) {
-        String thisPanelName = "AdminViewAllUsers";
+        // String thisPanelName = "AdminViewAllUsers";
         JPanel UserPanel = new JPanel(new BorderLayout());
         JPanel InnerPanel = new JPanel(new BorderLayout());
         JPanel MoviePanel = new JPanel(new BorderLayout());
@@ -2149,7 +2149,7 @@ class Panels {
     }
 
     public static JPanel AdminChangePasswordPanel(JPanel APP) {
-        String thisPanelName = "AdminChangePassword";
+        // String thisPanelName = "AdminChangePassword";
         JPanel currentPassPanel = new JPanel(new GridLayout(2, 1, 0, 5));
         JLabel currentPassLabel = new JLabel("Current Password");
         JPasswordField currentPass = new JPasswordField();
@@ -2221,7 +2221,6 @@ class Panels {
             }
         });
 
-        String oldPass = new String(currentPass.getPassword());
         Submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

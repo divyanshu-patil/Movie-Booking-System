@@ -10,15 +10,28 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
-import javafx.scene.control.ScrollToEvent;
-import javafx.scene.layout.Pane;
-
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import pkg.*;
-import pkg.JApp.WrapLayout;
+
+class Pass implements Serializable {
+    private String password;
+
+    Pass(String Pass) {
+        setPassword(Pass);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String Pass) {
+        this.password = Pass;
+    }
+}
 
 class Display {
     static Scanner in = new Scanner(System.in);
@@ -72,7 +85,6 @@ class Display {
                             ad.Admin_Details();
                             break;
                         case 5:
-                            Admin.changeAdminDetails();
 
                             break;
                         case 6:
@@ -216,7 +228,7 @@ class Admin {
     static Scanner in = new Scanner(System.in);
     static Console con = System.console();
     static private String Admin_name = "ADMIN";
-    static private String Admin_Password = "111";
+    static private String Admin_Password = null;
     static private String Admin_Contact_no = "+91 1234567890";
 
     static boolean checkAdminLogin(String username, String password) {
@@ -224,7 +236,6 @@ class Admin {
             return true;
         } else
             return false;
-
     }
 
     static boolean checkAdminLoginUsername(String username) {
@@ -259,67 +270,22 @@ class Admin {
 
     }
 
-    static void changeAdminDetails() {
-        Booking.ClearConsole();
-        int choice = 0;
-        System.out.println("\t\t\t\t\t===========================================");
-
-        System.out.println("\t\t\t\t\t\t1. Change Password");
-        System.out.println("\t\t\t\t\t\t2. Change contact number");
-        System.out.println("\t\t\t\t\t\t0. Exit");
-
-        System.out.println("\t\t\t\t\t===========================================\n");
-        System.out.print("\n\n\t\t\t\t\t\tChoose an option: ");
-        boolean checkint = false;
-        while (!checkint) {
-            try {
-                choice = in.nextInt();
-                in.nextLine();
-                checkint = true;
-
-                switch (choice) {
-                    case 1:
-                        System.out.print("\t\t\t\t\t\tEnter new Password: ");
-                        char[] temp = con.readPassword();
-                        String temp2String = new String(temp);
-                        String tempPasssword = temp2String.trim();
-                        System.out.print("\t\t\t\t\t\tConfirm new Password: ");
-                        temp = con.readPassword();
-                        temp2String = new String(temp);
-                        String tempPassword2 = temp2String.trim();
-                        if (tempPasssword.equals(tempPassword2)) {
-                            Admin_Password = tempPassword2;
-
-                        } else {
-                            System.out.print("\t\t\t\t\t\tEnter correct Password !");
-                            in.nextLine().trim();
-                            changeAdminDetails();
-                            return;
-                        }
-                        break;
-                    case 2:
-                        System.out.print("\t\t\t\t\t\tEnter new Mobile number: ");
-                        System.out.print("\t\t\t\t\t\t 91+ ");
-                        Admin_Contact_no = "+91 " + in.next().trim();
-                        break;
-                    case 0:
-                        break;
-
-                    default:
-                        System.out.println("\t\t\t\t\t\tEnter Valid Details !");
-                        in.nextLine().trim();
-                        changeAdminDetails();
-                }
-                System.out.println("\t\t\t\t\t\tChanges Saved Successfully !");
-
-            } catch (InputMismatchException e) {
-                System.out.println("\t\t\t\t\t\tEnter a Number !");
-                in.nextLine().trim();
-                in.nextLine();
-
-            }
-            in.nextLine();
+    static void initialize(String pass) {
+        System.out.println(Admin_Password);
+        if (Admin.Admin_Password == null) {
+            Admin.Admin_Password = pass;
+        } else {
+            System.out.println("cant change password");
         }
+    }
+
+    static boolean setPassword(String currentPass, String newPass) {
+        if (currentPass.equals(Admin.Admin_Password)) {
+            Admin_Password = newPass;
+            AppData.StoreAdminPass(newPass);
+            return true;
+        }
+        return false;
     }
 
     void Admin_Details() {
@@ -339,42 +305,6 @@ class Admin {
         in.nextLine().trim();
     }
 
-    // boolean Admin_Login(LinkedList<Movies> m,LinkedList<User> list) throws
-    // InterruptedException {
-
-    // // Admin obj=null ;
-    // // int ch;
-    // System.out.println("\t\t\t\t\t================================");
-    // System.out.println("\t\t\t\t\t\tEnter Username : ");
-    // String Test_name = in.next().trim();
-    // if (Test_name.equals(Admin_name)) {
-    // System.out.print("\t\t\t\t\t\tEnter Password : ");
-    // String Test_pass = in.next().trim();
-
-    // if (Test_pass.equals(Admin_Password)) {
-    // System.out.println();
-    // System.out.println();
-    // Booking.ClearConsole();
-    // System.out.println();
-    // System.out.println();
-    // System.out.println();
-    // System.out.println("\t\t\t\t\t\t------ welcome " + Admin_name + " ------");
-    // Display.onAdminLogin(m,list);
-    // return true;
-    // } else {
-    // System.out.println("\t\t\t\t\t\tinvalid details !");
-    // return false;
-    // }
-    // } else {
-    // System.out.println("\t\t\t\t\t\tAdmin not Found!");
-    // System.out.println("\t\t\t\t\t\tEnter to Continue");
-    // in.nextLine().trim();
-    // in.nextLine();
-    // return false;
-
-    // }
-
-    // }
 }
 
 class User implements Serializable {
@@ -399,6 +329,16 @@ class User implements Serializable {
         this.Username = username;
         this.Password = pass;
         this.First_Name = FName;
+    }
+
+    static User getUserObj(LinkedList<User> user, String username) {
+        for (User u : user) {
+            if (u.Username.equals(username)) {
+                return u;
+            }
+        }
+        return null;
+
     }
 
     static boolean isEmail(String email) {
@@ -1168,6 +1108,31 @@ class AppData {
         }));
     }
 
+    static void StoreAdminPass(String pass) {
+        try {
+            ObjectOutputStream fout = new ObjectOutputStream(new FileOutputStream("Admin.dat"));
+            fout.writeObject(new Pass(pass));
+            fout.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    static Pass fetchAdminPass() {
+
+        try {
+
+            ObjectInputStream fin = new ObjectInputStream(new FileInputStream("Admin.dat"));
+
+            Pass pass = (Pass) fin.readObject();
+            fin.close();
+            return pass;
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
     static void StoreUserLinkedList(LinkedList<User> User) {
 
         try {
@@ -1706,8 +1671,7 @@ class Panels {
         JButton AddMoviebtn = Style.createButton("Add Movie");
         JButton RemoveMoviebtn = Style.createButton("Remove Movie");
         JButton SeeAllMoviesbtn = Style.createButton("See all Movies");
-        JButton ViewAdminProfilebtn = Style.createButton("Profile");
-        // JButton EditProfilebtn = Style.createButton("Edit Profile");
+        JButton ChangePasswordbtn = Style.createButton("Change Password");
         JButton ViewAllUsersbtn = Style.createButton("View All Users");
 
         JPanel AdminHomePanel = new JPanel();
@@ -1716,7 +1680,7 @@ class Panels {
         JPanel InnerPanel = new JPanel();
         InnerPanel.setLayout(new GridLayout(5, 1, 0, 20));
 
-        JApp.add(InnerPanel, AddMoviebtn, RemoveMoviebtn, SeeAllMoviesbtn, ViewAdminProfilebtn, ViewAllUsersbtn);
+        JApp.add(InnerPanel, AddMoviebtn, RemoveMoviebtn, SeeAllMoviesbtn, ChangePasswordbtn, ViewAllUsersbtn);
 
         // sidePanel.add(settings);
         InnerPanel.setPreferredSize(new Dimension(500, 1000));
@@ -1763,6 +1727,20 @@ class Panels {
             public void actionPerformed(ActionEvent e) {
                 AppData.page_history.push(thisPanelName);
                 cardLayout.show(APP, "AdminShowAllMovie");
+            }
+        });
+        ChangePasswordbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "AdminChangePassword");
+            }
+        });
+        ViewAllUsersbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "AdminViewAllUsers");
             }
         });
         return AdminHomePanel;
@@ -2062,6 +2040,7 @@ class Panels {
 
         }
         Removebtn.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (String s : SelectedMovies) {
@@ -2111,6 +2090,173 @@ class Panels {
             }
         });
         return RemovePanel;
+    }
+
+    public static JPanel AdminViewAllUsersPanel(JPanel APP, LinkedList<User> u) {
+        String thisPanelName = "AdminViewAllUsers";
+        JPanel UserPanel = new JPanel(new BorderLayout());
+        JPanel InnerPanel = new JPanel(new BorderLayout());
+        JPanel MoviePanel = new JPanel(new BorderLayout());
+        JLabel title = new JLabel("Users");
+        UserPanel.add(title, BorderLayout.NORTH);
+
+        Style.applyPercentageMargins(UserPanel, MoviePanel, 0.20, 0.20);
+        Style.applyPercentageSize(UserPanel, title, 0.20, 0.03);
+        title.setFont(new Font("Arial", Font.PLAIN, 35));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        InnerPanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        MoviePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        UserPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        MoviePanel.add(InnerPanel);
+        UserPanel.add(MoviePanel);
+
+        // Column headers for the table
+        String[] columnHeaders = { "Username", "Password", "First Name", "Last Name", "Email" };
+
+        // Create the DefaultTableModel with the column headers
+        DefaultTableModel model = new DefaultTableModel(columnHeaders, 0);
+
+        // Populate the table model with data from the LinkedList<User>
+        for (User user : u) {
+            Object[] rowData = {
+                    user.Username,
+                    user.Password,
+                    user.First_Name,
+                    user.Last_Name,
+                    user.EmailAddress
+            };
+            model.addRow(rowData);
+        }
+
+        // Create the JTable with the model
+        JTable table = new JTable(model);
+        // Add the table to a JScrollPane to enable scrolling
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        InnerPanel.add(scrollPane);
+        UserPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(UserPanel, MoviePanel, 0.05, 0.05); // 10% margins
+                Style.applyPercentageSize(UserPanel, title, 0.20, 0.05);
+
+            }
+        });
+        return UserPanel;
+
+    }
+
+    public static JPanel AdminChangePasswordPanel(JPanel APP) {
+        String thisPanelName = "AdminChangePassword";
+        JPanel currentPassPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel currentPassLabel = new JLabel("Current Password");
+        JPasswordField currentPass = new JPasswordField();
+        JApp.add(currentPassPanel, currentPassLabel, currentPass);
+
+        JPanel newPassPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel newPassLabel = new JLabel("new Password");
+        JPasswordField newPass = new JPasswordField();
+        JApp.add(newPassPanel, newPassLabel, newPass);
+
+        JPanel confirmPassPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel confirmPassLabel = new JLabel("Confirm Password");
+        JPasswordField ConfirmPass = new JPasswordField();
+        JApp.add(confirmPassPanel, confirmPassLabel, ConfirmPass);
+
+        JButton Submit = Style.createButton("Change Password");
+        JLabel error = new JLabel();
+        error.setFont(new Font("Arial", Font.PLAIN, 24));
+        error.setForeground(Color.RED);
+        error.setHorizontalAlignment(SwingConstants.CENTER);
+        error.setVisible(false);
+
+        JPanel ChangePasswordPanel = new JPanel();
+        ChangePasswordPanel.setLayout(new BorderLayout());
+
+        JPanel InnerPanel = new JPanel();
+        InnerPanel.setLayout(new GridLayout(5, 1, 0, 20));
+
+        JApp.add(InnerPanel, currentPassPanel, newPassPanel, confirmPassPanel, Submit, error);
+
+        JPanel panels[] = { currentPassPanel, newPassPanel, confirmPassPanel };
+        JLabel labels[] = { currentPassLabel, newPassLabel, confirmPassLabel };
+        JTextComponent inputs[] = { currentPass, newPass, ConfirmPass };
+        for (JLabel l : labels) {
+            l.setForeground(Color.WHITE);
+            l.setFont(new Font("Arial", Font.PLAIN, 24));
+        }
+        for (JPanel p : panels) {
+            p.setBackground(Style.ColorConstants.BGCOLOR);
+        }
+        for (JTextComponent p : inputs) {
+            p.setFont(new Font("Arial", Font.PLAIN, 28));
+            p.setPreferredSize(new Dimension(50, 100));
+        }
+
+        // sidePanel.add(settings);
+
+        InnerPanel.setPreferredSize(new Dimension(300, 10));
+        Style.applyPercentageMargins(ChangePasswordPanel, InnerPanel, 0.30, 0.05); // 10% margins
+
+        // add(sidePanel, BorderLayout.WEST);
+        ChangePasswordPanel.add(InnerPanel, BorderLayout.CENTER);
+
+        InnerPanel.setBackground(Style.ColorConstants.BGCOLOR);
+
+        Label title = new Label("Change Password");
+        Style.applyPercentageSize(ChangePasswordPanel, title, 0.10, 0.20);
+        title.setAlignment(Label.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        ChangePasswordPanel.add(title, BorderLayout.NORTH);
+        // Add a ComponentListener to handle resizing and adjust margins dynamically
+        ChangePasswordPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(ChangePasswordPanel, InnerPanel, 0.30, 0.05); // 10% margins
+                Style.applyPercentageSize(ChangePasswordPanel, title, 0.10, 0.20);
+            }
+        });
+
+        String oldPass = new String(currentPass.getPassword());
+        Submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ((new String(currentPass.getPassword()).trim().isEmpty() ||
+                        new String(newPass.getPassword()).trim().isEmpty() ||
+                        new String(ConfirmPass.getPassword()).trim().isEmpty())) {
+
+                    error.setText("fill all fields");
+                    error.setVisible(true);
+                }
+
+                else if (Admin.checkAdminLogin("ADMIN", new String(currentPass.getPassword()))) {
+                    if (!(new String(newPass.getPassword()).trim().equals(
+                            new String(ConfirmPass.getPassword()).trim()))) {
+                        error.setText("new pass does'nt match");
+                        error.setVisible(true);
+                    } else {
+                        Admin.setPassword(new String(currentPass.getPassword()).trim(),
+                                new String(newPass.getPassword()).trim());
+                        System.out.println("password setted");
+                        currentPass.setText("");
+                        newPass.setText("");
+                        ConfirmPass.setText("");
+                        error.setVisible(false);
+                        cardLayout.show(APP, "AdminHomePage");
+                    }
+                } else {
+                    error.setText("incorrect password");
+                    error.setVisible(true);
+                }
+            }
+        });
+
+        return ChangePasswordPanel;
+
     }
 
     public static JPanel AdminShowMoviePanel(JPanel APP, Movies m) {
@@ -2285,6 +2431,7 @@ class Panels {
                 Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.05, 0.05); // 10% margins
                 Style.applyPercentageSize(RemovePanel, title, 0.20, 0.05);
             }
+
         });
         return RemovePanel;
     }
@@ -2392,6 +2539,12 @@ public class App2 extends JFrame {
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
         LinkedList<Ticket> l = new LinkedList<Ticket>();
+        System.out.println(AppData.fetchAdminPass());
+        if (AppData.fetchAdminPass() != null)
+            Admin.initialize(AppData.fetchAdminPass().getPassword());
+
+        else
+            Admin.initialize("111");
 
         User u = new User(list, "1", "1", "Bhavesh");
 
@@ -2425,12 +2578,18 @@ public class App2 extends JFrame {
         mainPanel.add("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
         componentsMap.put("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
 
+        mainPanel.add("AdminChangePassword", Panels.AdminChangePasswordPanel(mainPanel));
+        componentsMap.put("AdminChangePassword", Panels.AdminChangePasswordPanel(mainPanel));
+
+        mainPanel.add("AdminViewAllUsers", Panels.AdminViewAllUsersPanel(mainPanel, list));
+        componentsMap.put("AdminViewAllUsers", Panels.AdminViewAllUsersPanel(mainPanel, list));
+
         mainPanel.add("AdminShowAllMovie", Panels.AdminShowAllMoviePanel(mainPanel, m));
         componentsMap.put("AdminShowAllMovie", Panels.AdminShowAllMoviePanel(mainPanel, m));
 
         mainPanel.add("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
         componentsMap.put("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
-        // Panels.cardLayout.show(mainPanel, "AdminShowAllMovie");
+        // Panels.cardLayout.show(mainPanel, "AdminViewAllUsers");
 
         mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
         componentsMap.put("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
@@ -2505,7 +2664,6 @@ public class App2 extends JFrame {
         // AutoSave.start();
 
         // Movies movie = new Movies();
-        Display.loginPanel(list, m);
 
         AppData.StoreMovieLinkedList(m);
         // System.out.println("movies data saved sucessfully");

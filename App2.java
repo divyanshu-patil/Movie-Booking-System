@@ -1650,6 +1650,19 @@ class Panels {
                         for (JTextComponent p : inputs) {
                             p.setText("");
                         }
+
+                        // Remove the old panel
+                        JPanel oldPanel = componentsMap.get("AdminViewAllUsers");
+                        APP.remove(oldPanel);
+                        componentsMap.remove("AdminViewAllUsers");
+
+                        APP.add("AdminViewAllUsers", Panels.AdminViewAllUsersPanel(APP, list));
+                        componentsMap.put("AdminViewAllUsers", Panels.AdminViewAllUsersPanel(APP, list));
+
+                        // Update the layout
+                        APP.revalidate();
+                        APP.repaint();
+
                         AppData.page_history.push(thisPanelName);
                         cardLayout.show(APP, "Welcome");
                         error.setVisible(false);

@@ -1757,6 +1757,14 @@ class Panels {
 
             }
         });
+
+        SeeAllMoviesbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppData.page_history.push(thisPanelName);
+                cardLayout.show(APP, "AdminShowAllMovie");
+            }
+        });
         return AdminHomePanel;
     }
 
@@ -1946,19 +1954,29 @@ class Panels {
                         AppData.StoreMovieLinkedList(m);
                         error.setVisible(false);
 
-                        // Remove the old panel
-                        JPanel oldPanel = componentsMap.get("RemoveMovie");
-                        APP.remove(oldPanel);
-                        componentsMap.remove("RemoveMovie");
+                        Iterator<String> iterator = componentsMap.keySet().iterator();
+                        while (iterator.hasNext()) {
+                            String s = iterator.next();
+                            // Remove the old panel
+                            JPanel oldPanel = componentsMap.get(s);
+                            APP.remove(oldPanel);
+                            iterator.remove(); // Remove the key from the map
+                        }
 
                         // Create a new panel
-                        JPanel newPanel = Panels.RemoveMoviePanel(APP, m);
+                        JPanel RemovePanel = Panels.RemoveMoviePanel(APP, m);
+                        JPanel AdminMovieAdd = Panels.AdminMovieAdd(APP, m);
+                        JPanel AdminShowAllMovie = Panels.AdminShowAllMoviePanel(APP, m);
 
                         // Add the new panel to the mainPanel
-                        APP.add("RemoveMovie", newPanel);
+                        APP.add("RemoveMovie", RemovePanel);
+                        componentsMap.put("RemoveMovie", RemovePanel);
 
-                        // Put the new panel in the componentsMap
-                        componentsMap.put("RemoveMovie", newPanel);
+                        APP.add("AdminMovieADDPage", AdminMovieAdd);
+                        componentsMap.put("AdminMovieADDPage", AdminMovieAdd);
+
+                        APP.add("AdminShowAllMovie", AdminShowAllMovie);
+                        componentsMap.put("AdminShowAllMovie", AdminShowAllMovie);
 
                         // Update the layout
                         APP.revalidate();
@@ -2050,19 +2068,30 @@ class Panels {
                     m.remove(Movies.getMovieObj(m, s));
 
                 }
-                // Remove the old panel
-                JPanel oldPanel = componentsMap.get("RemoveMovie");
-                APP.remove(oldPanel);
-                componentsMap.remove("RemoveMovie");
+
+                Iterator<String> iterator = componentsMap.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String s = iterator.next();
+                    // Remove the old panel
+                    JPanel oldPanel = componentsMap.get(s);
+                    APP.remove(oldPanel);
+                    iterator.remove(); // Remove the key from the map
+                }
 
                 // Create a new panel
-                JPanel newPanel = Panels.RemoveMoviePanel(APP, m);
+                JPanel RemovePanel = Panels.RemoveMoviePanel(APP, m);
+                JPanel AdminMovieAdd = Panels.AdminMovieAdd(APP, m);
+                JPanel AdminShowAllMovie = Panels.AdminShowAllMoviePanel(APP, m);
 
                 // Add the new panel to the mainPanel
-                APP.add("RemoveMovie", newPanel);
+                APP.add("RemoveMovie", RemovePanel);
+                componentsMap.put("RemoveMovie", RemovePanel);
 
-                // Put the new panel in the componentsMap
-                componentsMap.put("RemoveMovie", newPanel);
+                APP.add("AdminMovieADDPage", AdminMovieAdd);
+                componentsMap.put("AdminMovieADDPage", AdminMovieAdd);
+
+                APP.add("AdminShowAllMovie", AdminShowAllMovie);
+                componentsMap.put("AdminShowAllMovie", AdminShowAllMovie);
 
                 // Update the layout
                 APP.revalidate();
@@ -2079,6 +2108,182 @@ class Panels {
                 Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.05, 0.05); // 10% margins
                 Style.applyPercentageSize(RemovePanel, title, 0.20, 0.05);
 
+            }
+        });
+        return RemovePanel;
+    }
+
+    public static JPanel AdminShowMoviePanel(JPanel APP, Movies m) {
+        JPanel showPanel = new JPanel(new BorderLayout());
+        JPanel InnerPanel = new JPanel(new BorderLayout());
+        JPanel MoviePanel = new JPanel(new BorderLayout());
+        JPanel DetailsPanelWrapper = new JPanel(new BorderLayout());
+        JPanel DetailsPanel = new JPanel(new GridLayout(5, 1));
+        JPanel ImagePanel = new JPanel();
+        JLabel title = new JLabel(m.movie_name);
+        JLabel imagelabel = new JLabel();
+        ImagePanel.add(imagelabel);
+
+        ImagePanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        ImagePanel.add(imagelabel, gbc);
+        InnerPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
+        // Set the preferred size for the ImagePanel
+        ImagePanel.setPreferredSize(new Dimension(200, 200));
+        showPanel.add(title, BorderLayout.NORTH);
+        DetailsPanelWrapper.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        DetailsPanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        ImagePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        InnerPanel.add(ImagePanel, BorderLayout.WEST);
+        DetailsPanelWrapper.add(DetailsPanel);
+        InnerPanel.add(DetailsPanelWrapper);
+        Style.applyPercentageMargins(showPanel, MoviePanel, 0.20, 0.20);
+        Style.applyPercentageMargins(InnerPanel, DetailsPanelWrapper, 0.15, 0.05);
+        Style.applyPercentageSize(InnerPanel, ImagePanel, 0.30, 1);
+        Style.applyPercentageSize(showPanel, title, 0.20, 0.03);
+        title.setFont(new Font("Arial", Font.PLAIN, 35));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        InnerPanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        MoviePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        showPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        MoviePanel.add(InnerPanel);
+        showPanel.add(MoviePanel);
+
+        JPanel MovieCodePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieCodeLabel = new JLabel("Movie Code");
+        JLabel MovieCode = new JLabel(m.movie_code);
+        MovieCodePanel.add(MovieCodeLabel);
+        MovieCodePanel.add(MovieCode);
+
+        JPanel MovieNamePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieNameLabel = new JLabel("Movie Name");
+        JLabel MovieName = new JLabel(m.movie_name);
+        MovieNamePanel.add(MovieNameLabel);
+        MovieNamePanel.add(MovieName);
+
+        JPanel MovieDatePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieDateLabel = new JLabel("Movie Date");
+        JLabel MovieDate = new JLabel(m.Movie_date);
+        MovieDatePanel.add(MovieDateLabel);
+        MovieDatePanel.add(MovieDate);
+
+        JPanel MovieTimePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MovieTimeLabel = new JLabel("Movie Time");
+        JLabel MovieTime = new JLabel(m.Time);
+        MovieTimePanel.add(MovieTimeLabel);
+        MovieTimePanel.add(MovieTime);
+
+        JPanel MoviePricePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JLabel MoviePriceLabel = new JLabel("Movie Price");
+        JLabel MoviePrice = new JLabel(m.movie_price + "");
+        MoviePricePanel.add(MoviePriceLabel);
+        MoviePricePanel.add(MoviePrice);
+
+        JPanel panels[] = { MovieCodePanel, MovieNamePanel, MovieDatePanel, MovieTimePanel, MoviePricePanel };
+        JLabel labels[] = { MovieCodeLabel, MovieNameLabel, MovieDateLabel, MovieTimeLabel, MoviePriceLabel };
+        JLabel inputs[] = { MovieCode, MovieName, MovieDate, MovieTime, MoviePrice };
+        for (JLabel l : labels) {
+            l.setForeground(Color.WHITE); // Keep this white
+            l.setFont(new Font("Arial", Font.BOLD, 36));
+        }
+        for (JPanel p : panels) {
+            p.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        }
+        for (JLabel p : inputs) {
+            p.setForeground(Color.GRAY); // Keep this white
+            p.setFont(new Font("Arial", Font.PLAIN, 32));
+        }
+
+        JApp.add(DetailsPanel, MovieCodePanel, MovieNamePanel, MovieDatePanel, MovieTimePanel,
+                MoviePricePanel);
+
+        showPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(showPanel, MoviePanel, 0.05, 0.05); // 10% margins
+                Style.applyPercentageSize(showPanel, title, 0.20, 0.05);
+                Style.applyPercentageSize(InnerPanel, ImagePanel, 0.30, 1);
+                Style.applyPercentageMargins(InnerPanel, DetailsPanelWrapper, 0.15, 0.05);
+                Style.applyPercentageSize(ImagePanel, imagelabel, 1, 1);
+
+                ImageIcon ico = JApp.fitImage(m.img, 600, 600);
+                imagelabel.setIcon(ico);
+                APP.revalidate();
+                APP.repaint();
+            }
+        });
+        return showPanel;
+
+    }
+
+    public static JPanel AdminShowAllMoviePanel(JPanel APP, LinkedList<Movies> m) {
+
+        String thisPanelName = "AdminShowAllMovie";
+        JPanel RemovePanel = new JPanel(new BorderLayout());
+        JPanel InnerPanel = new JPanel(new JApp.WrapLayout(FlowLayout.LEFT, 10, 20));
+        JPanel MoviePanel = new JPanel(new BorderLayout());
+        JScrollPane ScrollPane = new JScrollPane(InnerPanel);
+        JLabel title = new JLabel("Now Streaming");
+        RemovePanel.add(title, BorderLayout.NORTH);
+
+        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.20, 0.20);
+        Style.applyPercentageSize(RemovePanel, title, 0.20, 0.03);
+        title.setFont(new Font("Arial", Font.PLAIN, 35));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setBackground(Style.ColorConstants.BGCOLOR);
+        title.setForeground(Color.WHITE);
+        InnerPanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+        MoviePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        RemovePanel.setBackground(Style.ColorConstants.BGCOLOR);
+        MoviePanel.add(ScrollPane);
+        RemovePanel.add(MoviePanel);
+
+        for (Movies s : m) {
+            JPanel b = new JPanel();
+            b.setLayout(new BorderLayout());
+            ImageIcon ico = JApp.fitImage(s.img, 300, 600);
+            JButton imagePanel = new JButton(ico);
+            imagePanel.setBackground(Style.ColorConstants.LIGHTBG_COLOR);
+
+            b.setBorder(BorderFactory.createLineBorder(Style.ColorConstants.LIGHTBG_COLOR, 10));
+            b.add(imagePanel);
+            InnerPanel.add(b);
+            b.setPreferredSize(new Dimension(300, 400));
+
+            imagePanel.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JPanel p = componentsMap.get("AdminShowMovie");
+                    if (p != null)
+                        APP.remove(p);
+                    componentsMap.remove("AdminShowMovie");
+
+                    JPanel newPanel = Panels.AdminShowMoviePanel(APP, s);
+                    APP.add("AdminShowMovie", newPanel);
+                    componentsMap.put("AdminShowMovie", newPanel);
+                    // Update the layout
+                    APP.revalidate();
+                    APP.repaint();
+                    AppData.page_history.push(thisPanelName);
+                    cardLayout.show(APP, "AdminShowMovie");
+                }
+            });
+
+        }
+
+        RemovePanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+
+            public void componentResized(ComponentEvent e) {
+                Style.applyPercentageMargins(RemovePanel, MoviePanel, 0.05, 0.05); // 10% margins
+                Style.applyPercentageSize(RemovePanel, title, 0.20, 0.05);
             }
         });
         return RemovePanel;
@@ -2220,9 +2425,12 @@ public class App2 extends JFrame {
         mainPanel.add("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
         componentsMap.put("AdminMovieADDPage", Panels.AdminMovieAdd(mainPanel, m));
 
+        mainPanel.add("AdminShowAllMovie", Panels.AdminShowAllMoviePanel(mainPanel, m));
+        componentsMap.put("AdminShowAllMovie", Panels.AdminShowAllMoviePanel(mainPanel, m));
+
         mainPanel.add("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
         componentsMap.put("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
-        // Panels.cardLayout.show(mainPanel, "RemoveMovie");
+        // Panels.cardLayout.show(mainPanel, "AdminShowAllMovie");
 
         mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
         componentsMap.put("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));

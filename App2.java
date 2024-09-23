@@ -330,6 +330,7 @@ class User implements Serializable {
     static Scanner in = new Scanner(System.in);
     // LinkedList<Ticket> l = new LinkedList<Ticket>();
     static Console con = System.console();
+    LinkedList<Ticket> l = new LinkedList<Ticket>();
     // fields
     String First_Name;
     String Last_Name;
@@ -359,6 +360,9 @@ class User implements Serializable {
         return null;
 
     }
+
+    
+
 
     static boolean isEmail(String email) {
 
@@ -552,9 +556,10 @@ class Movies implements Serializable {
         Arrays.fill(seatStates, false);
     }
 
-    public Movies(String Name, String Date, String time, double Price, String Url) {
+    public Movies(String Name, String code , String Date, String time, double Price, String Url) {
         movie_name = Name;
         Movie_date = Date;
+        movie_code = code;
         Time = time;
         movie_price = Price;
         img = Url;
@@ -824,165 +829,194 @@ class Seat_Check {
 }
 
 class Ticket implements Serializable {
-    // long Mobile_no = 1234567899;
-    static int base_ticketno = 100;
-    // // int MOvie_code = 192398;
-    char Movie_Seat;
-    // int seat_Booked_count = 16;
-    int Theater_Contact_no = 111111111;
+    // // long Mobile_no = 1234567899;
+    // static int base_ticketno = 100;
+    // // // int MOvie_code = 192398;
+    // char Movie_Seat;
+    // // int seat_Booked_count = 16;
+    // int Theater_Contact_no = 111111111;
 
-    String Theater_Name = "Heloooo";
-    static Scanner in = new Scanner(System.in);
-    // fields
-    int tkt_no;
-    long mobile_no;
-    String MovieCode;
+    // String Theater_Name = "Heloooo";
+    // static Scanner in = new Scanner(System.in);
+    // // fields
+    // int tkt_no;
+    // long mobile_no;
+    // String MovieCode;
 
-    // String name = "user1";
-    // String password = "111";
-    // String Time = "11:00";
+    // // String name = "user1";
+    // // String password = "111";
+    // // String Time = "11:00";
 
-    void resetSeat(Movies m) {
-        m.resetSeat(Movie_Seat);
+    // void resetSeat(Movies m) {
+    //     m.resetSeat(Movie_Seat);
 
-    }
+    // }
 
-    boolean getDetails(LinkedList<Movies> movies) throws InterruptedException {
-        Seat_Check s = new Seat_Check();
-        // int choice =1;
+    // boolean getDetails(LinkedList<Movies> movies) throws InterruptedException {
+    //     Seat_Check s = new Seat_Check();
+    //     // int choice =1;
 
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("                                " + "--------Fill Following Information--------");
-        System.out.println();
-        System.out.println();
-        boolean flag = false;
-        // Automatic Generation
-        System.out.print("|->|\t\t\t\tEnter movie code: ");
-        boolean checkint = false;
-        while (!checkint) {
-            try {
-                MovieCode = in.nextLine();
-                in.nextLine();
-                checkint = true;
-            } catch (InputMismatchException e) {
-                System.out.println("\t\t\t\t\t\tEnter a Number !");
-                in.nextLine().trim();
-                in.nextLine();
+    //     System.out.println();
+    //     System.out.println();
+    //     System.out.println();
+    //     System.out.println("                                " + "--------Fill Following Information--------");
+    //     System.out.println();
+    //     System.out.println();
+    //     boolean flag = false;
+    //     // Automatic Generation
+    //     System.out.print("|->|\t\t\t\tEnter movie code: ");
+    //     boolean checkint = false;
+    //     while (!checkint) {
+    //         try {
+    //             MovieCode = in.nextLine();
+    //             in.nextLine();
+    //             checkint = true;
+    //         } catch (InputMismatchException e) {
+    //             System.out.println("\t\t\t\t\t\tEnter a Number !");
+    //             in.nextLine().trim();
+    //             in.nextLine();
 
-            }
+    //         }
+    //     }
+    //     Movies obj2 = null;
+    //     for (Movies obj : movies) {
+    //         if (MovieCode == obj.movie_code) {
+    //             obj2 = obj;
+    //             Booking.ClearConsole();
+    //             flag = true;
+    //             break;
+    //         }
+    //     }
+
+    //     // We have to Show the Movie code on Screen
+    //     if (flag) {
+    //         char cha;
+    //         // while (choice != 0) {
+    //         cha = s.accept_data(obj2.seats);
+
+    //         if (cha != 0) {
+    //             Booking.ClearConsole();
+    //             s.showSeats(cha, obj2.seats);
+    //             Movie_Seat = cha;
+    //             tkt_no = base_ticketno + 1;
+    //             base_ticketno++;
+    //             return true;
+
+    //         }
+    //         return false;
+    //         // System.out.println("Enter 0 to exit, 1 to continue: ");
+    //         // choice = in.nextInt();
+    //         // }
+    //     } else {
+    //         System.out.println("\t\t\t\t\t\t Enter Valid Movie Code");
+
+    //         in.nextLine().trim();
+
+    //         return false;
+    //     }
+    //     // Then user give input of movie code, date, time.
+    //     // User input
+    // }
+
+    // void Ticket_Generation(LinkedList<Movies> movies) throws InterruptedException {
+    //     // Scanner in = new Scanner(System.in);
+    //     Movies m = new Movies();
+    //     for (Movies obj : movies) {
+    //         if (obj.movie_code == MovieCode) {
+    //             m = obj;
+    //             break;
+    //         }
+    //     }
+
+    //     in.nextLine().trim();
+    //     System.out.println("                                          Generating Ticket!!                     ");
+    //     Thread.sleep(1500);
+    //     Booking.ClearConsole();
+    //     Booking.ClearConsole();
+    //     System.out.println();
+    //     System.out.println();
+    //     System.out
+    //             .println("                                       Ticket Generated Successfully!!                     ");
+    //     System.out.println();
+
+    //     System.out.println();
+    //     System.out.println();
+    //     System.out.println();
+
+    //     System.out.println("                                          " + "=========================================");
+    //     System.out.println("                                          "
+    //             + "                                                      ");
+    //     System.out.println("                                          " + "           Theater Name = " + Theater_Name);
+    //     System.out.println("                                          "
+    //             + "                                                      ");
+    //     System.out.println("                                          " + "    Ticket No = " + tkt_no);
+    //     System.out.println("                                          " + "    Movie code = " + MovieCode);
+    //     System.out.println("                                          " + "    Movie Name = " + m.movie_name);
+    //     System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
+    //     System.out.println("                                          " + "    Movie Time = " + m.Time);
+    //     System.out.println("                                          " + "    Movie Price = " + m.movie_price);
+    //     System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
+    //     System.out.println(
+    //             "                                          " + "    Theater Contact No = " + Theater_Contact_no);
+    //     System.out.println("                                          " + "=========================================");
+
+    // }
+
+    // void printDetails(LinkedList<Movies> movies) throws InterruptedException {
+    //     Movies m = new Movies();
+    //     for (Movies obj : movies) {
+    //         if (obj.movie_code == MovieCode) {
+    //             m = obj;
+    //             break;
+    //         }
+    //     }
+
+    //     System.out.println("                                          " + "=========================================");
+    //     System.out.println("                                          "
+    //             + "                                                      ");
+    //     System.out.println("                                          " + "           Theater Name = " + Theater_Name);
+    //     System.out.println("                                          "
+    //             + "                                                      ");
+    //     System.out.println("                                          " + "    Ticket no = " + tkt_no);
+    //     System.out.println("                                          " + "    Movie Name = " + m.movie_name);
+    //     System.out.println("                                          " + "    Movie Code = " + m.movie_code);
+    //     System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
+    //     System.out.println("                                          " + "    Movie Time = " + m.Time);
+    //     System.out.println("                                          " + "    Movie Price = " + m.movie_price);
+    //     System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
+    //     System.out.println(
+    //             "                                          " + "    Theater Contact No = " + Theater_Contact_no);
+    //     System.out.println("                                          " + "=========================================");
+    // }
+
+
+        private String movieName;
+        private String movieCode;
+        private String theaterName;
+        private String seatNumbers;
+        private String dateTime;
+        private double price;
+    
+        // Constructor
+        public Ticket(String movieName, String movieCode, String theaterName, String seatNumbers, String dateTime, double price) {
+            this.movieName = movieName;
+            this.movieCode = movieCode;
+            this.theaterName = theaterName;
+            this.seatNumbers = seatNumbers;
+            this.dateTime = dateTime;
+            this.price = price;
         }
-        Movies obj2 = null;
-        for (Movies obj : movies) {
-            if (MovieCode == obj.movie_code) {
-                obj2 = obj;
-                Booking.ClearConsole();
-                flag = true;
-                break;
+    
+        public static void addTicketToUser(User user, Ticket ticket) {
+            user.l.add(ticket);
+
+            for ( Ticket tp : user.l) {
+                System.out.println(tp.movieCode);
             }
+           
         }
 
-        // We have to Show the Movie code on Screen
-        if (flag) {
-            char cha;
-            // while (choice != 0) {
-            cha = s.accept_data(obj2.seats);
 
-            if (cha != 0) {
-                Booking.ClearConsole();
-                s.showSeats(cha, obj2.seats);
-                Movie_Seat = cha;
-                tkt_no = base_ticketno + 1;
-                base_ticketno++;
-                return true;
-
-            }
-            return false;
-            // System.out.println("Enter 0 to exit, 1 to continue: ");
-            // choice = in.nextInt();
-            // }
-        } else {
-            System.out.println("\t\t\t\t\t\t Enter Valid Movie Code");
-
-            in.nextLine().trim();
-
-            return false;
-        }
-        // Then user give input of movie code, date, time.
-        // User input
-    }
-
-    void Ticket_Generation(LinkedList<Movies> movies) throws InterruptedException {
-        // Scanner in = new Scanner(System.in);
-        Movies m = new Movies();
-        for (Movies obj : movies) {
-            if (obj.movie_code == MovieCode) {
-                m = obj;
-                break;
-            }
-        }
-
-        in.nextLine().trim();
-        System.out.println("                                          Generating Ticket!!                     ");
-        Thread.sleep(1500);
-        Booking.ClearConsole();
-        Booking.ClearConsole();
-        System.out.println();
-        System.out.println();
-        System.out
-                .println("                                       Ticket Generated Successfully!!                     ");
-        System.out.println();
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-        System.out.println("                                          " + "=========================================");
-        System.out.println("                                          "
-                + "                                                      ");
-        System.out.println("                                          " + "           Theater Name = " + Theater_Name);
-        System.out.println("                                          "
-                + "                                                      ");
-        System.out.println("                                          " + "    Ticket No = " + tkt_no);
-        System.out.println("                                          " + "    Movie code = " + MovieCode);
-        System.out.println("                                          " + "    Movie Name = " + m.movie_name);
-        System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
-        System.out.println("                                          " + "    Movie Time = " + m.Time);
-        System.out.println("                                          " + "    Movie Price = " + m.movie_price);
-        System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
-        System.out.println(
-                "                                          " + "    Theater Contact No = " + Theater_Contact_no);
-        System.out.println("                                          " + "=========================================");
-
-    }
-
-    void printDetails(LinkedList<Movies> movies) throws InterruptedException {
-        Movies m = new Movies();
-        for (Movies obj : movies) {
-            if (obj.movie_code == MovieCode) {
-                m = obj;
-                break;
-            }
-        }
-
-        System.out.println("                                          " + "=========================================");
-        System.out.println("                                          "
-                + "                                                      ");
-        System.out.println("                                          " + "           Theater Name = " + Theater_Name);
-        System.out.println("                                          "
-                + "                                                      ");
-        System.out.println("                                          " + "    Ticket no = " + tkt_no);
-        System.out.println("                                          " + "    Movie Name = " + m.movie_name);
-        System.out.println("                                          " + "    Movie Code = " + m.movie_code);
-        System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
-        System.out.println("                                          " + "    Movie Time = " + m.Time);
-        System.out.println("                                          " + "    Movie Price = " + m.movie_price);
-        System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
-        System.out.println(
-                "                                          " + "    Theater Contact No = " + Theater_Contact_no);
-        System.out.println("                                          " + "=========================================");
-    }
 
 }
 
@@ -1017,20 +1051,20 @@ class Booking {
         Booking.ClearConsole();
         Movies.Show_all_Movies(movies);
 
-        t = new Ticket();
-        flag = t.getDetails(movies);
-        ticket.add(t);
+        // t = new Ticket();
+        // flag = t.getDetails(movies);
+        // ticket.add(t);
 
-        // Call Ticket_Generation() only once after all tickets are added
-        if (flag) {
+        // // Call Ticket_Generation() only once after all tickets are added
+        // if (flag) {
 
-            t.Ticket_Generation(movies);
-        }
-        for (Ticket c : ticket) {
-            if (c.tkt_no == 0) {
-                ticket.remove(c);
-            }
-        }
+        //     t.Ticket_Generation(movies);
+        // }
+        // for (Ticket c : ticket) {
+        //     if (c.tkt_no == 0) {
+        //         ticket.remove(c);
+        //     }
+        // }
         System.out.println("\t\t\t\t\t\tpress any key to Continue");
         in.nextLine().trim();
         Booking.ClearConsole();
@@ -1071,24 +1105,24 @@ class Booking {
             }
         }
 
-        for (Ticket a : ticket) {
-            if (remove_code == a.tkt_no) {
-                for (Movies m : movies) {
-                    if (m.movie_code == a.MovieCode)
-                        a.resetSeat(m);
+        // for (Ticket a : ticket) {
+        //     if (remove_code == a.tkt_no) {
+        //         for (Movies m : movies) {
+        //             if (m.movie_code == a.MovieCode)
+        //                 a.resetSeat(m);
 
-                }
-                ticket.remove(ticket.indexOf(a));
-                flag = true;
+        //         }
+        //         ticket.remove(ticket.indexOf(a));
+        //         flag = true;
 
-                System.out.println("\t\t\t\t\t\tTICKET has been Removed Successfully! ");
+        //         System.out.println("\t\t\t\t\t\tTICKET has been Removed Successfully! ");
 
-                in.nextLine().trim();
-                Booking.ClearConsole();
-                break;
+        //         in.nextLine().trim();
+        //         Booking.ClearConsole();
+        //         break;
 
-            }
-        }
+        //     }
+        // }
         if (!flag) {
             System.out.println("\t\t\t\t\t\tBooking not exists");
             in.nextLine().trim();
@@ -1107,7 +1141,7 @@ class Booking {
             System.out.println();
             System.out.println(
                     "\t\t\t------------------------------------------------------------------------------------------");
-            c.printDetails(movies);
+            // c.printDetails(movies);
             System.out.println(
                     "\t\t\t------------------------------------------------------------------------------------------");
 
@@ -1125,6 +1159,7 @@ class AppData {
     static Scanner in = new Scanner(System.in);
     static LinkedList<User> Userll;
     static LinkedList<Movies> Moviesll;
+    public static User loggedInUser;
 
     static boolean exit = false;
 
@@ -1361,275 +1396,15 @@ class AppData {
 
 
 
-class seat{
+
+
+class Panels {
     
     private static JLabel MovieNameLabel = new JLabel();
     private static JLabel MovieOtherparameters = new JLabel();
     public static double selectedMoviePrice; // Store the selected movie price here
 
-    public static JPanel MoviePanel(JPanel APP, JPanel sec , LinkedList<Movies> movieList, LinkedList<Ticket> l , CardLayout Layout ) {
-        String thisPanelName = "Movie section";
 
-        JPanel MoviePanel = new JPanel(new BorderLayout());
-        int col= 7;
-    
-   
-        
-        int rows = (int) Math.ceil((double) movieList.size() / col);
-
-        JPanel section = new JPanel(new GridLayout(rows, col, 15, 70)); 
-
-        section.setBorder(new EmptyBorder(100, 100, 100, 100));
-        section.setBackground(Style.ColorConstants.BGCOLOR);
-    
-        for (Movies movie : movieList) {
-            JPanel movieCard = new JPanel();
-            movieCard.setLayout(new GridBagLayout());
-            GridBagConstraints g = new GridBagConstraints();
-            // movieCard.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-            movieCard.setBackground(Style.ColorConstants.BGCOLOR);
-    
-            g.gridx = 0;
-            g.gridy = 0;
-            g.gridheight = 1;
-            g.fill = GridBagConstraints.HORIZONTAL;
-            g.insets = new Insets(4, 10, 4, 10);
-            JLabel imgLabel = new JLabel(new ImageIcon(movie.img));
-            imgLabel.setBackground(Style.ColorConstants.BGCOLOR);
-            imgLabel.setForeground(Color.WHITE);
-            movieCard.add(imgLabel, g);
-    
-            // Add movie name
-            g.gridy = 1;
-            JLabel nameLabel = new JLabel(movie.movie_name);
-            nameLabel.setBackground(Style.ColorConstants.BGCOLOR);
-            nameLabel.setForeground(Color.WHITE);
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
-            movieCard.add(nameLabel, g);
-    
-            // Add movie date
-            g.gridy = 2;
-            JLabel dateLabel = new JLabel("Date: " + movie.Movie_date);
-            dateLabel.setBackground(Style.ColorConstants.BGCOLOR);
-            dateLabel.setForeground(Color.WHITE);
-            dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            movieCard.add(dateLabel, g);
-    
-            // Add movie time
-            g.gridy = 3;
-            JLabel timeLabel = new JLabel("Time: " + movie.Time);
-            timeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            timeLabel.setBackground(Style.ColorConstants.BGCOLOR);
-            timeLabel.setForeground(Color.WHITE);
-            movieCard.add(timeLabel, g);
-    
-            // Add movie price
-            g.gridy = 4;
-            JLabel priceLabel = new JLabel("Price: $" + movie.movie_price);
-            priceLabel.setBackground(Style.ColorConstants.BGCOLOR);
-            priceLabel.setForeground(Color.WHITE);
-            priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            movieCard.add(priceLabel, g);
-
-            JApp.addListener("MouseListener", movieCard, movie.movie_name, () -> {
-                seat.selectedMoviePrice = movie.movie_price;
-            
-                AppData.page_history.push(thisPanelName);
-                MovieNameLabel.setText(movie.movie_name);
-                MovieOtherparameters.setText("movie code - " + movie.movie_code + " || Time - " + movie.Time + " || Date - " + movie.Movie_date + " || price - " + movie.movie_price);
-                
-                // Clear existing components in MoviePanel
-                sec.removeAll();
-                
-                // Call the SeatPanel method and add it to MoviePanel
-                sec.add(seat.SeatPanel( APP ,sec,MoviePanel, movieList, movie.SEATS , movie , Layout));
-                
-                // Show the seat section
-                // cardLayout.show(APP, "seat section");
-                
-                // Refresh the MoviePanel to display the new content
-                sec.revalidate();
-                sec.repaint();
-            });
-            
-    
-            // Add the movie card to the section panel
-            section.add(movieCard);
-        }
-    
-        // Add section to a scroll pane for scrolling support
-        MoviePanel.add(new JScrollPane(section), BorderLayout.CENTER);
-    
-        return MoviePanel;
-    }
-
-    protected static Container selectedSeats;
-
-    public static JPanel SeatPanel(JPanel APP, JPanel sec , JPanel movie, LinkedList<Movies> movieList , JButton[] SEATS , Movies obj , CardLayout Layout) {
-        int i = 0;
-    
-        JButton proceed = Style.createButton(String.format("Pay Rs %.2f", seat.selectedMoviePrice));
-        String thisPanelName = "seat section";
-        JPanel seatsPanel = new JPanel();
-        seatsPanel.setLayout(new BorderLayout());
-        seatsPanel.setBackground(Style.ColorConstants.BGCOLOR);
-    
-        JPanel NorthPanel = new JPanel();
-        NorthPanel.setLayout(new BorderLayout());
-        NorthPanel.setBackground(Style.ColorConstants.BGCOLOR);
-        NorthPanel.setBorder(new EmptyBorder(10, 60, 0, 0));
-    
-        JPanel coverpanel = new JPanel();
-        coverpanel.setLayout(new GridLayout(2, 1));
-        coverpanel.setBackground(Style.ColorConstants.BGCOLOR);
-    
-        MovieNameLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-        MovieNameLabel.setBackground(Style.ColorConstants.BGCOLOR);
-        MovieNameLabel.setForeground(Color.WHITE);
-    
-        MovieOtherparameters.setFont(new Font("Arial", Font.PLAIN, 15));
-        MovieOtherparameters.setBackground(Style.ColorConstants.BGCOLOR);
-        MovieOtherparameters.setForeground(Color.WHITE);
-    
-        JApp.add(coverpanel, MovieNameLabel, MovieOtherparameters);
-        NorthPanel.add(coverpanel, "West");
-        seatsPanel.add(NorthPanel, BorderLayout.NORTH);
-    
-        JPanel bottom = new JPanel();
-        JPanel selectedseat = new JPanel();
-    
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridBagLayout());
-        centerPanel.setBackground(Style.ColorConstants.BGCOLOR);
-    
-        GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        g.gridheight = 1;
-        g.fill = GridBagConstraints.HORIZONTAL;
-        g.insets = new Insets(4, 10, 100, 10);
-        JPanel seatarrangment = new JPanel();
-        centerPanel.add(seatarrangment,g);
-    
-        g.gridx = 0;
-        g.gridy = 2;
-        g.gridheight = 1;
-        g.fill = GridBagConstraints.HORIZONTAL;
-        g.insets = new Insets(4, 10, 4, 10);
-        JPanel Display = new JPanel();
-        Display.setBackground(Style.ColorConstants.BGCOLOR);
-        JLabel l = new JLabel(new ImageIcon("Movie-Booking-System/Img/display.png"));
-        Display.add(l);
-        centerPanel.add(Display,g);
-    
-        seatarrangment.setBackground(Style.ColorConstants.BGCOLOR);
-        seatarrangment.setLayout(new GridLayout(5, 5, 20, 20));
-    
-        // Initialize the seat buttons array before using it
-        JButton[] seats = new JButton[25];  
-        List<JButton> selectedSeats = new ArrayList<>();  // Track selected seats
-    
-        for (i = seats.length; i >= 1; i--) {
-            seats[i - 1] = new JButton(String.valueOf(i)); // Initialize the button here
-    
-            if (obj.seatStates[i-1]) {
-                // Seat is taken (already selected)
-                seats[i-1].setEnabled(false);
-                seats[i-1].setBackground(Color.GRAY);
-                
-         
-               
-            } else {
-                // Seat is available
-                seats[i-1].setBackground(Color.WHITE);
-            }
-
-        
-            seats[i-1].setPreferredSize(new Dimension(60,60));
-    
-            seats[i-1].addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    bottom.setVisible(false);
-                    seatsPanel.remove(bottom);
-                    seatsPanel.add(selectedseat, "South");
-    
-                    JButton selectedButton = (JButton) e.getSource();
-    
-                    if (selectedButton.getBackground() == Color.GREEN) {
-                        selectedButton.setBackground(Color.WHITE);
-    
-                        double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
-                        PRICE -= seat.selectedMoviePrice;  // Deduct the price of the movie
-                        proceed.setText(String.format("Pay Rs %.2f", PRICE));
-    
-                        selectedSeats.remove(selectedButton);  // Remove the deselected button from the list
-                        obj.seatStates[Integer.parseInt(selectedButton.getText()) - 1] = false;  // Mark seat as available
-                    } else {
-                        selectedButton.setBackground(Color.GREEN);
-    
-                        double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
-                        PRICE += seat.selectedMoviePrice;  // Add the price of the movie
-                        proceed.setText(String.format("Pay Rs %.2f", PRICE));
-    
-                        selectedSeats.add(selectedButton);  // Add the selected button to the list
-                        
-                        
-                    }
-                }
-            });
-    
-            seatarrangment.add(seats[i-1]);
-        }
-    
-        seatsPanel.add(centerPanel);
-    
-        selectedseat.add(proceed);
-    
-        seatsPanel.add(selectedseat, "South");
-    
-        JApp.addListener("ActionListener", proceed, "click", () -> {
-            for (JButton selectedSeat : selectedSeats) {
-                selectedSeat.setEnabled(false);
-                selectedSeat.setBackground(Color.GRAY);
-                selectedSeat.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2)); // Change border to white
-        
-                // Update the seat state in the Movies object
-                int seatIndex = Integer.parseInt(selectedSeat.getText()) - 1;
-                obj.seatStates[seatIndex] = true;
-
-                Layout.show(APP,"Ticket Generation section");
-
-            }
-            selectedSeats.clear();
-        });
-    
-        // Back button to return to movie selection
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> {
-            sec.removeAll();  // Clear the current panel
-            sec.add(movie);   // Add the movie selection panel back
-    
-            sec.revalidate();
-            sec.repaint();
-        });
-        selectedseat.add(backButton);
-    
-        JLabel Available = new JLabel("Available");
-        JLabel Disable = new JLabel("Disabled");
-        JLabel selected = new JLabel("Selected");
-    
-        JApp.add(bottom, Available, Disable, selected);
-        seatsPanel.add(bottom, "South");
-    
-        return seatsPanel;
-    }
-    
-}
-
-
-
-
-class Panels {
     public static CardLayout cardLayout = new CardLayout();
     private static HashMap<String, JPanel> componentsMap = new HashMap<>();
 
@@ -1707,9 +1482,9 @@ class Panels {
     }
 
     public static JPanel loginPanel(JPanel APP, LinkedList<User> list, LinkedList<Movies> m) {
-
+        // User Obj = null;
+        
         String thisPanelName = "Login";
-
         JPanel login = new JPanel();
         login.setLayout(new BorderLayout());
 
@@ -1801,10 +1576,27 @@ class Panels {
                     } else if (User.userLogin(list, m, usernamefield.getText().trim(),
                             new String(pass.getPassword()).trim())) {
                         System.out.println("user is present");
+
+                        User Obj = null;
+                        for (User u : list) {
+                           
+                            if ( u.Username != null && u.Username.equals(usernamefield.getText().trim())) {
+                                Obj = u;// Storing The user in Obj
+                                break;
+                            }
+                        }
+
                         usernamefield.setText("");
                         pass.setText("");
                         AppData.page_history.push(thisPanelName);
-                        cardLayout.show(APP, "Welcome");
+                       
+                        APP.add("Home Page",  Panels.HomePanel(APP, list, m, Obj));
+                        componentsMap.put("Home Page", Panels.HomePanel(APP, list, m, Obj));
+                
+                       cardLayout.show(APP, "Home Page");
+              
+                
+                        
 
                     } else {
                         System.out.println("user is absent");
@@ -2745,8 +2537,7 @@ class Panels {
     }
 
     public static JPanel HomePanel(
-            JPanel APP, LinkedList<User> list, LinkedList<Movies> m, LinkedList<Ticket> l,
-            String name, User OBJ) {
+            JPanel APP, LinkedList<User> list, LinkedList<Movies> m, User OBJ) {
 
                 String thisPanelName = "Home Page";
         JPanel Home = new JPanel();
@@ -2770,7 +2561,7 @@ class Panels {
 
         JButton ProfileLogo = new JButton();
         ProfileLogo.setBackground(Style.ColorConstants.BGCOLOR);
-        ProfileLogo.setIcon(JApp.fitImage("Img/profile.png", 200, 200));
+        ProfileLogo.setIcon(JApp.fitImage("Movie-Booking-System/Img/profile.png", 200, 200));
         ProfileLogo.setFocusPainted(false);
         ProfileLogo.setBorder(null);
         ProfileLogo.setContentAreaFilled(false);
@@ -2820,7 +2611,13 @@ class Panels {
         });
         JApp.addListener("ActionListener", addTicket, "List", () -> {
             AppData.page_history.push(thisPanelName);
-            cardLayout.show(APP, "Movie section");
+                       
+                        APP.add("Movie Page",  Panels.MoviePanel(APP, m, OBJ, cardLayout));
+                        componentsMap.put("Movie Page", Panels.MoviePanel(APP, m, OBJ, cardLayout));
+                
+                       cardLayout.show(APP, "Movie Page");
+
+
 
         });
         JApp.addListener("ActionListener", cancleTicket, "cancleTicket", () -> {
@@ -2834,23 +2631,253 @@ class Panels {
     }
 
 
-    public static JPanel MoviePanel(JPanel APP, LinkedList<Movies> m, LinkedList<Ticket> l){
+    public static JPanel MoviePanel(JPanel APP, LinkedList<Movies> movieList,User obj, /*  LinkedList<Ticket> l */ CardLayout Layout ) {
+        String thisPanelName = "Movie Page";
 
-        JPanel Section = new JPanel();
-        Section.setLayout(new BorderLayout());
-        Section.add(seat.MoviePanel( APP , Section, m, l , cardLayout ));
+        JPanel MoviePanel = new JPanel(new BorderLayout());
+        int col= 7;
+    
+   
+        
+        int rows = (int) Math.ceil((double) movieList.size() / col);
 
-        return Section;
+        JPanel section = new JPanel(new GridLayout(rows, col, 15, 70)); 
 
+        section.setBorder(new EmptyBorder(100, 100, 100, 100));
+        section.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        for (Movies movie : movieList) {
+            JPanel movieCard = new JPanel();
+            movieCard.setLayout(new GridBagLayout());
+            GridBagConstraints g = new GridBagConstraints();
+            // movieCard.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+            movieCard.setBackground(Style.ColorConstants.BGCOLOR);
+    
+            g.gridx = 0;
+            g.gridy = 0;
+            g.gridheight = 1;
+            g.fill = GridBagConstraints.HORIZONTAL;
+            g.insets = new Insets(4, 10, 4, 10);
+            JLabel imgLabel = new JLabel(new ImageIcon(movie.img));
+            imgLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            imgLabel.setForeground(Color.WHITE);
+            movieCard.add(imgLabel, g);
+    
+            // Add movie name
+            g.gridy = 1;
+            JLabel nameLabel = new JLabel(movie.movie_name);
+            nameLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            nameLabel.setForeground(Color.WHITE);
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            movieCard.add(nameLabel, g);
+    
+            // Add movie date
+            g.gridy = 2;
+            JLabel dateLabel = new JLabel("Date: " + movie.Movie_date);
+            dateLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            dateLabel.setForeground(Color.WHITE);
+            dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            movieCard.add(dateLabel, g);
+    
+            // Add movie time
+            g.gridy = 3;
+            JLabel timeLabel = new JLabel("Time: " + movie.Time);
+            timeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            timeLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            timeLabel.setForeground(Color.WHITE);
+            movieCard.add(timeLabel, g);
+    
+            // Add movie price
+            g.gridy = 4;
+            JLabel priceLabel = new JLabel("Price: $" + movie.movie_price);
+            priceLabel.setBackground(Style.ColorConstants.BGCOLOR);
+            priceLabel.setForeground(Color.WHITE);
+            priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            movieCard.add(priceLabel, g);
+
+            JApp.addListener("MouseListener", movieCard, movie.movie_name, () -> {
+                Panels.selectedMoviePrice = movie.movie_price;
+            
+                AppData.page_history.push(thisPanelName);
+                MovieNameLabel.setText(movie.movie_name);
+                MovieOtherparameters.setText("movie code - " + movie.movie_code + " || Time - " + movie.Time + " || Date - " + movie.Movie_date + " || price - " + movie.movie_price);
+         
+
+                APP.add("Seat Page",  Panels.SeatPanel(APP, movieList,  movie.SEATS , movie ,obj, Layout));
+                componentsMap.put("Seat Page",  Panels.SeatPanel(APP, movieList,  movie.SEATS , movie, obj , Layout));
+        
+               cardLayout.show(APP, "Seat Page");
+            });
+            
+    
+            // Add the movie card to the section panel
+            section.add(movieCard);
+        }
+    
+        // Add section to a scroll pane for scrolling support
+        MoviePanel.add(new JScrollPane(section), BorderLayout.CENTER);
+    
+        return MoviePanel;
     }
 
-    public static JPanel TicketGenerationPanel(JPanel APP, LinkedList<Movies> m, LinkedList<Ticket> l){
+    static List<JButton> selectedSeats = new ArrayList<>();  // Track selected seats
+
+
+    public static JPanel SeatPanel(JPanel APP, LinkedList<Movies> movieList , JButton[] SEATS , Movies movie , User obj , CardLayout Layout) {
+        int i = 0;
+    
+        JButton proceed = Style.createButton(String.format("Pay Rs %.2f", Panels.selectedMoviePrice));
+        String thisPanelName = "Seat Page";
+        JPanel seatsPanel = new JPanel();
+        seatsPanel.setLayout(new BorderLayout());
+        seatsPanel.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        JPanel NorthPanel = new JPanel();
+        NorthPanel.setLayout(new BorderLayout());
+        NorthPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        NorthPanel.setBorder(new EmptyBorder(10, 60, 0, 0));
+    
+        JPanel coverpanel = new JPanel();
+        coverpanel.setLayout(new GridLayout(2, 1));
+        coverpanel.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        MovieNameLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        MovieNameLabel.setBackground(Style.ColorConstants.BGCOLOR);
+        MovieNameLabel.setForeground(Color.WHITE);
+    
+        MovieOtherparameters.setFont(new Font("Arial", Font.PLAIN, 15));
+        MovieOtherparameters.setBackground(Style.ColorConstants.BGCOLOR);
+        MovieOtherparameters.setForeground(Color.WHITE);
+    
+        JApp.add(coverpanel, MovieNameLabel, MovieOtherparameters);
+        NorthPanel.add(coverpanel, "West");
+        seatsPanel.add(NorthPanel, BorderLayout.NORTH);
+    
+        JPanel bottom = new JPanel();
+        JPanel selectedseat = new JPanel();
+    
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridBagLayout());
+        centerPanel.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.gridy = 0;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 100, 10);
+        JPanel seatarrangment = new JPanel();
+        centerPanel.add(seatarrangment,g);
+    
+        g.gridx = 0;
+        g.gridy = 2;
+        g.gridheight = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(4, 10, 4, 10);
+        JPanel Display = new JPanel();
+        Display.setBackground(Style.ColorConstants.BGCOLOR);
+        JLabel l = new JLabel(new ImageIcon("Movie-Booking-System/Img/display.png"));
+        Display.add(l);
+        centerPanel.add(Display,g);
+    
+        seatarrangment.setBackground(Style.ColorConstants.BGCOLOR);
+        seatarrangment.setLayout(new GridLayout(5, 5, 20, 20));
+    
+        // Initialize the seat buttons array before using it
+        JButton[] seats = new JButton[25];  
+    
+    
+        for (i = seats.length; i >= 1; i--) {
+            seats[i - 1] = new JButton(String.valueOf(i)); // Initialize the button here
+    
+            if (movie.seatStates[i-1]) {
+                // Seat is taken (already selected)
+                seats[i-1].setEnabled(false);
+                seats[i-1].setBackground(Color.GRAY);
+                
+         
+               
+            } else {
+                // Seat is available
+                seats[i-1].setBackground(Color.WHITE);
+            }
+
+        
+            seats[i-1].setPreferredSize(new Dimension(60,60));
+    
+            seats[i-1].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    bottom.setVisible(false);
+                    seatsPanel.remove(bottom);
+                    seatsPanel.add(selectedseat, "South");
+    
+                    JButton selectedButton = (JButton) e.getSource();
+    
+                    if (selectedButton.getBackground() == Color.GREEN) {
+                        selectedButton.setBackground(Color.WHITE);
+    
+                        double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
+                        PRICE -= Panels.selectedMoviePrice;  // Deduct the price of the movie
+                        proceed.setText(String.format("Pay Rs %.2f", PRICE));
+    
+                        selectedSeats.remove(selectedButton);  // Remove the deselected button from the list
+                        movie.seatStates[Integer.parseInt(selectedButton.getText()) - 1] = false;  // Mark seat as available
+                    } else {
+                        selectedButton.setBackground(Color.GREEN);
+    
+                        double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
+                        PRICE += Panels.selectedMoviePrice;  // Add the price of the movie
+                        proceed.setText(String.format("Pay Rs %.2f", PRICE));
+    
+                        selectedSeats.add(selectedButton);  // Add the selected button to the list
+                        
+                        
+                    }
+                }
+            });
+    
+            seatarrangment.add(seats[i-1]);
+        }
+    
+        seatsPanel.add(centerPanel);
+    
+        selectedseat.add(proceed);
+    
+        seatsPanel.add(selectedseat, "South");
+    
+        JApp.addListener("ActionListener", proceed, "click", () -> {
+
+            AppData.page_history.push(thisPanelName);
+                       
+            APP.add("ticket Page",  Panels.TicketGenerationPanel(APP,movie, obj, selectedSeats  , cardLayout));
+            componentsMap.put("ticket Page",  Panels.TicketGenerationPanel(APP,movie, obj, selectedSeats , cardLayout));
+    
+           cardLayout.show(APP, "ticket Page");
+
+        });
+ 
+        JLabel Available = new JLabel("Available");
+        JLabel Disable = new JLabel("Disabled");
+        JLabel selected = new JLabel("Selected");
+    
+        JApp.add(bottom, Available, Disable, selected);
+        seatsPanel.add(bottom, "South");
+    
+        return seatsPanel;
+    }
+
+    
+    public static JPanel TicketGenerationPanel(JPanel APP, Movies movie , User obj ,  List<JButton> selectedSeats  , CardLayout Layout ){
 
         JPanel TicektPanel = new JPanel(new BorderLayout());
 
         TicektPanel.setBackground(Style.ColorConstants.BGCOLOR);
 
-        JLabel TheaterName = new JLabel("INOX");
+        JLabel TheaterName = new JLabel("INOX",JApp.fitImage("Movie-Booking-System/Img/inox logo.png", 70, 70),JLabel.CENTER);
+       
+        TheaterName.setFont(new Font("Arial", Font.BOLD, 50));
+        TheaterName.setBackground(Style.ColorConstants.BGCOLOR);
+        TheaterName.setForeground(Color.WHITE);
 
         TicektPanel.add(TheaterName,"North");
 
@@ -2900,7 +2927,7 @@ class Panels {
                     g.gridwidth = 1;
                     g.fill = GridBagConstraints.HORIZONTAL;
                     g.insets = new Insets(0, 10, 20, 10);
-                    JLabel MovieName = new JLabel("Movie name - Avengers");
+                    JLabel MovieName = new JLabel("Movie name - " + movie.movie_name);
                     MovieName.setFont(new Font("Arial", Font.BOLD, 20));
                     MovieDetails.add(MovieName,g);
 
@@ -2911,7 +2938,7 @@ class Panels {
                     g.gridwidth = 1;
                     g.fill = GridBagConstraints.HORIZONTAL;
                     g.insets = new Insets(7, 10, 7, 10);
-                    JLabel MovieCode = new JLabel("Movie Code - 0001");
+                    JLabel MovieCode = new JLabel("Movie Code - " + movie.movie_code);
                     MovieCode.setFont(new Font("Arial", Font.PLAIN, 20));
                     MovieDetails.add(MovieCode,g);
 
@@ -2922,7 +2949,7 @@ class Panels {
                     g.gridwidth = 1;
                     g.fill = GridBagConstraints.HORIZONTAL;
                     g.insets = new Insets(7, 10, 7, 10);
-                    JLabel MovieDate = new JLabel("Date - 12/04/2024  || Time - 12:00 ");
+                    JLabel MovieDate = new JLabel("Date - " + movie.Movie_date + " || Time - " + movie.Time);
                     MovieDate.setFont(new Font("Arial", Font.PLAIN, 20));
                     MovieDetails.add(MovieDate,g);
 
@@ -2932,7 +2959,7 @@ class Panels {
                     g.gridwidth = 1;
                     g.fill = GridBagConstraints.HORIZONTAL;
                     g.insets = new Insets(7, 10, 7, 10);
-                    JLabel MoviePrice = new JLabel("Price - 400Rs");
+                    JLabel MoviePrice = new JLabel("Price - " + movie.movie_price);
                     MoviePrice.setFont(new Font("Arial", Font.PLAIN, 20));
                     MovieDetails.add(MoviePrice,g);
 
@@ -2989,6 +3016,8 @@ class Panels {
         g.fill = GridBagConstraints.HORIZONTAL;
         g.insets = new Insets(4, 10, 4, 10);
         JPanel innerPanel3 = new JPanel(new GridBagLayout());
+        innerPanel3.setPreferredSize(new Dimension(350,350));
+        innerPanel3.setBackground(Color.WHITE);
         outerPanel.add(innerPanel3,g);
 
 
@@ -2998,33 +3027,68 @@ class Panels {
                 g.gridwidth = 1;
                 g.fill = GridBagConstraints.HORIZONTAL;
                 g.insets = new Insets(4, 10, 4, 10);
-                JLabel qr = new JLabel(new ImageIcon("Movie-Booking-System/Img/QR.png"));
+                JLabel qr = new JLabel(JApp.fitImage("Movie-Booking-System/Img/QR.png", 300, 300));
                 innerPanel3.add(qr,g);
 
 
-
-
-
-
-
-
-
         TicektPanel.add(outerPanel);
 
 
 
+        JButton confirm = Style.createButton("CONFIRM", Color.RED);
+        JButton cancel = Style.createButton("CANCLE");
 
+        JPanel bottom = new JPanel();
+
+        bottom.add(confirm);
+        bottom.add(cancel);
+
+        TicektPanel.add(bottom,"South");
+
+
+        JApp.addListener("ActionListener", confirm, "confirm ticket", () -> {
+            String seatNumbers = "";
+            for (JButton selectedSeat : selectedSeats) {
+                selectedSeat.setEnabled(false);
+                selectedSeat.setBackground(Color.GRAY);
+                selectedSeat.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2)); // Change border to white
+        
+                // Update the seat state in the Movies object
+                int seatIndex = Integer.parseInt(selectedSeat.getText()) - 1;
+                movie.seatStates[seatIndex] = true;
+        
+                // Collect seat numbers for the ticket
+                seatNumbers += selectedSeat.getText() + " ";
+            }
+        
+            // Clear selected seats after booking
+            selectedSeats.clear();
+        
+            // Create a new ticket
+            Ticket ticket = new Ticket(movie.movie_name, movie.movie_code, "INOX", seatNumbers.trim(),
+                                       movie.Movie_date + " " + movie.Time, movie.movie_price);
+        
+            // Add the ticket to the user's account
+            Ticket.addTicketToUser(obj, ticket);
+        
+            System.out.println("Ticket booked successfully!");
+
+
+         
+
+        });
+        
+
+
+        JApp.addListener("ActionListener", cancel, "Cancle ticket", ()->{
             
-            
-            
-            
-
-
-
-        TicektPanel.add(outerPanel);
-
-
-
+            for (JButton selectedSeat : selectedSeats) {  
+                selectedSeat.setBackground(Color.white);
+            }
+            selectedSeats.clear();
+            cardLayout.show(APP, "Seat Page");
+          
+        });
 
 
         return TicektPanel;
@@ -3032,7 +3096,17 @@ class Panels {
 
 
 
+
+
+
+
+
+
+
+
 }
+
+
 
 
 
@@ -3053,7 +3127,20 @@ public class App2 extends JFrame {
         Panels.updateHashMap(componentsMap);
         LinkedList<Movies> m = AppData.fetchMovieLinkedList();
         LinkedList<User> list = AppData.fetchUserLinkedList();
-        LinkedList<Ticket> l = new LinkedList<Ticket>();
+       
+// dummy
+
+        m.add(new Movies("pppppp", "1010", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
+        m.add(new Movies("bbbbbbbbb", "1020", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
+        m.add(new Movies("ccccccccc", "1030", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
+        m.add(new Movies("ddddddddd", "1040", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
+
+
+
+
+
+
+
         System.out.println(AppData.fetchAdminPass());
         if (AppData.fetchAdminPass() != null)
             Admin.initialize(AppData.fetchAdminPass().getPassword());
@@ -3082,6 +3169,7 @@ public class App2 extends JFrame {
 
         mainPanel.add("Welcome", Panels.welcomePanel(mainPanel));
         componentsMap.put("Welcome", Panels.welcomePanel(mainPanel));
+       
 
         mainPanel.add("Login", Panels.loginPanel(mainPanel, list, m));
         componentsMap.put("Login", Panels.loginPanel(mainPanel, list, m));
@@ -3108,21 +3196,30 @@ public class App2 extends JFrame {
         componentsMap.put("RemoveMovie", Panels.RemoveMoviePanel(mainPanel, m));
         // Panels.cardLayout.show(mainPanel, "AdminViewAllUsers");
 
-        mainPanel.add("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
-        componentsMap.put("Home Page", Panels.HomePanel(mainPanel, list, m, l, "BHAVESH", u));
 
-
-        mainPanel.add("Movie section", Panels.MoviePanel(mainPanel, m, l));
-        componentsMap.put("Movie section", Panels.MoviePanel(mainPanel, m, l));
-
-        mainPanel.add("Ticket Generation section", Panels.TicketGenerationPanel(mainPanel, m, l));
-        componentsMap.put("Ticket Generation section", Panels.TicketGenerationPanel(mainPanel, m, l));
+        // mainPanel.add("Ticket Generation section", Panels.TicketGenerationPanel(mainPanel, m, l));
+        // componentsMap.put("Ticket Generation section", Panels.TicketGenerationPanel(mainPanel, m, l));
 
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!AppData.page_history.isEmpty()) {
-                    Panels.cardLayout.show(mainPanel, AppData.page_history.pop());
+
+                    String popelement = AppData.page_history.pop();
+                    if (popelement == "Seat Page") {
+                          
+                        for (JButton selectedSeat : Panels.selectedSeats) {  
+                            selectedSeat.setBackground(Color.white);
+                        }
+                        Panels.selectedSeats.clear();
+                        Panels.cardLayout.show(mainPanel, "Seat Page");
+                      
+                    
+                    }else{
+
+                        Panels.cardLayout.show(mainPanel, popelement);
+                    }
+
                 }
             }
         });

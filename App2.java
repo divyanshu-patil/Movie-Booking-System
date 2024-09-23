@@ -89,13 +89,13 @@ class Display {
 
                     switch (choice) {
                         case 1:
-                            movies.Add_Movies_List(m);
+                            // movies.Add_Movies_List(m);
                             break;
                         case 2:
-                            Movies.remove_movie(m);
+                            // Movies.remove_movie(m);
                             break;
                         case 3:
-                            Movies.Show_all_Movies(m);
+                            // Movies.Show_all_Movies(m);
                             System.out.println("Press any Key to Continue");
                             in.nextLine().trim();
                             break;
@@ -549,10 +549,9 @@ class Movies implements Serializable {
 
     public JButton[] SEATS = new JButton[25];
 
-    public boolean[] seatStates = new boolean[25]; // Assuming 25 seats
+    public boolean[] seatStates = new boolean[25]; 
 
     public Movies() {
-    
         Arrays.fill(seatStates, false);
     }
 
@@ -563,158 +562,20 @@ class Movies implements Serializable {
         Time = time;
         movie_price = Price;
         img = Url;
+
+        Arrays.fill(seatStates, false);
+        initializeSeats(); 
     }
 
-
-    void resetSeat(char ch) {
-        char seat = 'A';
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                if (seat == ch) {
-                    seats[i][j] = 0;
-                    return;
-                } else {
-                    seat++;
-                }
-            }
-        }
-
-    }
-
-    void Add_Movies_List(LinkedList<Movies> m) {
-        Movies Movie = new Movies();
-        Movie.getDetails(m);
-        m.add(Movie);
-        System.out.println("Adding Movie");
-        System.out.println("Movie successfully added !");
-        System.out.print("Enter to Continue = ");
-        in.nextLine().trim();
-
-        Booking.ClearConsole();
-
-    }
-
-    public static void Show_all_Movies(LinkedList<Movies> m) {
-
-        Booking.ClearConsole();
-        for (Movies ch : m) {
-            System.out.println("\t\t\t\t\t==================================");
-            System.out.println("\t\t\t\t\t\tmovie code: " + ch.movie_code);
-            System.out.println("\t\t\t\t\t\tname      : " + ch.movie_name);
-            System.out.println("\t\t\t\t\t\tdate      : " + ch.Movie_date);
-            System.out.println("\t\t\t\t\t\ttime      : " + ch.Time);
-            System.out.println("\t\t\t\t\t\tprice     : " + ch.movie_price);
-            System.out.println("\t\t\t\t\t====================================");
-
-        }
-
-    }
-
-    public static void remove_movie(LinkedList<Movies> m) {
-        String remove_code = "";
-        boolean flag = false;
-        Show_all_Movies(m);
-        System.out.print("\t\t\t\t enter the  Movie code to remove movie = ");
-        boolean checkint = false;
-        while (!checkint) {
-            try {
-                remove_code = in.nextLine();
-                in.nextLine();
-                checkint = true;
-
-                for (Movies a : m) {
-                    if (remove_code == a.movie_code) {
-                        m.remove(m.indexOf(a));
-                        System.out.println("\t\t\t\t\t\tMovie has been Removed Successfully! ");
-
-                        flag = true;
-                        break;
-
-                    }
-
-                }
-                if (!flag) {
-                    System.out.println("\t\t\t\t\t\t movie not exists");
-                }
-                System.out.print("\t\t\t\t\t\tEnter to Continue = ");
-                in.nextLine().trim();
-                Booking.ClearConsole();
-            } catch (InputMismatchException e) {
-                System.out.println("\t\t\t\t\t\tEnter a Number !");
-                in.nextLine().trim();
-                in.nextLine();
-                break;
-
-            }
+    private void initializeSeats() {
+        for (int i = 0; i < SEATS.length; i++) {
+            SEATS[i] = new JButton(String.valueOf(i + 1));  // Seat number starts from 1
+            SEATS[i].setEnabled(true);  // Initially, all seats are enabled
+            SEATS[i].setBackground(Color.WHITE);  // Set default background color
         }
     }
 
-    void getDetails(LinkedList<Movies> m) {
-        boolean flag = false;
-        String testMovie_code;
-        testMovie_code = "";
-        do {
-            Booking.ClearConsole();
-            System.out.println("\t\t\t\t------Fill Following Information to Create New Movie------\n\n");
-            boolean checkint = false;
-            while (!checkint) {
-                System.out.print("\t\t\t\t\t\tEnter movie code: ");
-                checkint = false;
-                try {
-                    testMovie_code = in.nextLine();
-                    in.nextLine();
-                    checkint = true;
 
-                    flag = false;
-                    for (Movies test : m) {
-                        if (test.movie_code == testMovie_code) { // if movie code exists
-                            System.out.println(
-                                    "\t\t\t\t\t\tMovie with Moviecode " + testMovie_code
-                                            + " Already exists\n\t\t\t\t\t\tEnter Unique Movie Code");
-                            flag = true;
-                            in.nextLine().trim();
-                            break;
-                        }
-                    }
-
-                    if (!flag) {
-                        movie_code = testMovie_code;
-                        flag = false;
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("\t\t\t\t\t\tEnter a Number !");
-                    in.nextLine().trim();
-                    in.nextLine();
-
-                }
-
-            }
-        } while (flag);
-
-        System.out.print("\t\t\t\t\t\tEnter movie name: ");
-        movie_name = in.next().trim();
-
-        System.out.print("\t\t\t\t\t\tEnter movie date(DD/MM/YYYY): ");
-        Movie_date = in.next().trim();
-
-        System.out.print("\t\t\t\t\t\tEnter movie Time(HH:MM): ");
-        Time = in.next().trim();
-
-        System.out.print("\t\t\t\t\t\tEnter price: ");
-        boolean checkint = false;
-        while (!checkint) {
-            try {
-                movie_price = in.nextInt();
-                in.nextLine();
-                checkint = true;
-            } catch (InputMismatchException e) {
-                System.out.println("\t\t\t\t\t\tEnter a Number !");
-                in.nextLine().trim();
-                in.nextLine();
-
-            }
-        }
-    }
 
     public static boolean isCodeExists(LinkedList<Movies> movies, String code) {
         for (Movies m : movies) {
@@ -730,6 +591,18 @@ class Movies implements Serializable {
                 return m;
         }
         return null;
+    }
+
+    public static void resetSeats(List<Integer> seatNumbers , JButton[] SEATS , boolean[] seatStates) {
+        for (Integer seatNumber : seatNumbers) {
+          
+            int seatIndex = seatNumber - 1;
+            if (seatIndex >= 0 && seatIndex < SEATS.length) {
+                SEATS[seatIndex].setEnabled(true);  
+                SEATS[seatIndex].setBackground(Color.WHITE); 
+                seatStates[seatIndex] = false; 
+            }
+        }
     }
 
 }
@@ -829,176 +702,17 @@ class Seat_Check {
 }
 
 class Ticket implements Serializable {
-    // // long Mobile_no = 1234567899;
-    // static int base_ticketno = 100;
-    // // // int MOvie_code = 192398;
-    // char Movie_Seat;
-    // // int seat_Booked_count = 16;
-    // int Theater_Contact_no = 111111111;
-
-    // String Theater_Name = "Heloooo";
-    // static Scanner in = new Scanner(System.in);
-    // // fields
-    // int tkt_no;
-    // long mobile_no;
-    // String MovieCode;
-
-    // // String name = "user1";
-    // // String password = "111";
-    // // String Time = "11:00";
-
-    // void resetSeat(Movies m) {
-    //     m.resetSeat(Movie_Seat);
-
-    // }
-
-    // boolean getDetails(LinkedList<Movies> movies) throws InterruptedException {
-    //     Seat_Check s = new Seat_Check();
-    //     // int choice =1;
-
-    //     System.out.println();
-    //     System.out.println();
-    //     System.out.println();
-    //     System.out.println("                                " + "--------Fill Following Information--------");
-    //     System.out.println();
-    //     System.out.println();
-    //     boolean flag = false;
-    //     // Automatic Generation
-    //     System.out.print("|->|\t\t\t\tEnter movie code: ");
-    //     boolean checkint = false;
-    //     while (!checkint) {
-    //         try {
-    //             MovieCode = in.nextLine();
-    //             in.nextLine();
-    //             checkint = true;
-    //         } catch (InputMismatchException e) {
-    //             System.out.println("\t\t\t\t\t\tEnter a Number !");
-    //             in.nextLine().trim();
-    //             in.nextLine();
-
-    //         }
-    //     }
-    //     Movies obj2 = null;
-    //     for (Movies obj : movies) {
-    //         if (MovieCode == obj.movie_code) {
-    //             obj2 = obj;
-    //             Booking.ClearConsole();
-    //             flag = true;
-    //             break;
-    //         }
-    //     }
-
-    //     // We have to Show the Movie code on Screen
-    //     if (flag) {
-    //         char cha;
-    //         // while (choice != 0) {
-    //         cha = s.accept_data(obj2.seats);
-
-    //         if (cha != 0) {
-    //             Booking.ClearConsole();
-    //             s.showSeats(cha, obj2.seats);
-    //             Movie_Seat = cha;
-    //             tkt_no = base_ticketno + 1;
-    //             base_ticketno++;
-    //             return true;
-
-    //         }
-    //         return false;
-    //         // System.out.println("Enter 0 to exit, 1 to continue: ");
-    //         // choice = in.nextInt();
-    //         // }
-    //     } else {
-    //         System.out.println("\t\t\t\t\t\t Enter Valid Movie Code");
-
-    //         in.nextLine().trim();
-
-    //         return false;
-    //     }
-    //     // Then user give input of movie code, date, time.
-    //     // User input
-    // }
-
-    // void Ticket_Generation(LinkedList<Movies> movies) throws InterruptedException {
-    //     // Scanner in = new Scanner(System.in);
-    //     Movies m = new Movies();
-    //     for (Movies obj : movies) {
-    //         if (obj.movie_code == MovieCode) {
-    //             m = obj;
-    //             break;
-    //         }
-    //     }
-
-    //     in.nextLine().trim();
-    //     System.out.println("                                          Generating Ticket!!                     ");
-    //     Thread.sleep(1500);
-    //     Booking.ClearConsole();
-    //     Booking.ClearConsole();
-    //     System.out.println();
-    //     System.out.println();
-    //     System.out
-    //             .println("                                       Ticket Generated Successfully!!                     ");
-    //     System.out.println();
-
-    //     System.out.println();
-    //     System.out.println();
-    //     System.out.println();
-
-    //     System.out.println("                                          " + "=========================================");
-    //     System.out.println("                                          "
-    //             + "                                                      ");
-    //     System.out.println("                                          " + "           Theater Name = " + Theater_Name);
-    //     System.out.println("                                          "
-    //             + "                                                      ");
-    //     System.out.println("                                          " + "    Ticket No = " + tkt_no);
-    //     System.out.println("                                          " + "    Movie code = " + MovieCode);
-    //     System.out.println("                                          " + "    Movie Name = " + m.movie_name);
-    //     System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
-    //     System.out.println("                                          " + "    Movie Time = " + m.Time);
-    //     System.out.println("                                          " + "    Movie Price = " + m.movie_price);
-    //     System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
-    //     System.out.println(
-    //             "                                          " + "    Theater Contact No = " + Theater_Contact_no);
-    //     System.out.println("                                          " + "=========================================");
-
-    // }
-
-    // void printDetails(LinkedList<Movies> movies) throws InterruptedException {
-    //     Movies m = new Movies();
-    //     for (Movies obj : movies) {
-    //         if (obj.movie_code == MovieCode) {
-    //             m = obj;
-    //             break;
-    //         }
-    //     }
-
-    //     System.out.println("                                          " + "=========================================");
-    //     System.out.println("                                          "
-    //             + "                                                      ");
-    //     System.out.println("                                          " + "           Theater Name = " + Theater_Name);
-    //     System.out.println("                                          "
-    //             + "                                                      ");
-    //     System.out.println("                                          " + "    Ticket no = " + tkt_no);
-    //     System.out.println("                                          " + "    Movie Name = " + m.movie_name);
-    //     System.out.println("                                          " + "    Movie Code = " + m.movie_code);
-    //     System.out.println("                                          " + "    Movie Date = " + m.Movie_date);
-    //     System.out.println("                                          " + "    Movie Time = " + m.Time);
-    //     System.out.println("                                          " + "    Movie Price = " + m.movie_price);
-    //     System.out.println("                                          " + "    Your Seats = " + Movie_Seat);
-    //     System.out.println(
-    //             "                                          " + "    Theater Contact No = " + Theater_Contact_no);
-    //     System.out.println("                                          " + "=========================================");
-    // }
 
 
-        private String movieName;
-        private String movieCode;
-        private String theaterName;
-        private String seatNumbers;
-        private String dateTime;
-        private double price;
+        public String movieName;
+        public String movieCode;
+        public String theaterName;
+        List<Integer> seatNumbers;
+        public String dateTime;
+        public double price;
     
         // Constructor
-        public Ticket(String movieName, String movieCode, String theaterName, String seatNumbers, String dateTime, double price) {
+        public Ticket(String movieName, String movieCode, String theaterName,   List<Integer> seatNumbers, String dateTime, double price) {
             this.movieName = movieName;
             this.movieCode = movieCode;
             this.theaterName = theaterName;
@@ -1013,7 +727,7 @@ class Ticket implements Serializable {
             for ( Ticket tp : user.l) {
                 System.out.println(tp.movieCode);
             }
-           
+        
         }
 
 
@@ -1049,7 +763,7 @@ class Booking {
         boolean flag;
 
         Booking.ClearConsole();
-        Movies.Show_all_Movies(movies);
+        // Movies.Show_all_Movies(movies);
 
         // t = new Ticket();
         // flag = t.getDetails(movies);
@@ -1761,6 +1475,7 @@ class Panels {
                 }
             }
         });
+        
         return loginPanel;
 
     }
@@ -2546,19 +2261,29 @@ class Panels {
         Home.setBorder(new EmptyBorder(10, 20, 0, 20));
 
         JPanel NorthPanel = new JPanel();
+    
+        NorthPanel.setLayout(new GridBagLayout());
         NorthPanel.setBackground(Style.ColorConstants.BGCOLOR);
-        NorthPanel.setLayout(new BorderLayout());
+
+        GridBagConstraints g = new GridBagConstraints();
         NorthPanel.setPreferredSize(new Dimension(0, 300));
 
         Home.add(NorthPanel, "North");
 
+        g.gridx = 0;
+        g.gridy =0;
+        g.fill = GridBagConstraints.HORIZONTAL;
         JLabel userName = new JLabel("Welcome " + " " + OBJ.First_Name);
         userName.setHorizontalAlignment(JLabel.CENTER);
         userName.setFont(new Font("Arial", Font.BOLD, 50));
         userName.setBackground(Style.ColorConstants.BGCOLOR);
         userName.setForeground(Color.WHITE);
-        NorthPanel.add(userName);
+        NorthPanel.add(userName,g);
 
+
+        g.gridx = 0;
+        g.gridy =1;
+        g.fill = GridBagConstraints.HORIZONTAL;
         JButton ProfileLogo = new JButton();
         ProfileLogo.setBackground(Style.ColorConstants.BGCOLOR);
         ProfileLogo.setIcon(JApp.fitImage("Movie-Booking-System/Img/profile.png", 200, 200));
@@ -2568,7 +2293,7 @@ class Panels {
         ProfileLogo.setToolTipText("Click Here to See Profile ");
         Style.applyPercentageMargins(ProfileLogo, NorthPanel, 0.30, 0.70); // 10% margins
 
-        NorthPanel.add(ProfileLogo, BorderLayout.SOUTH);
+        NorthPanel.add(ProfileLogo , g);
 
         JPanel CenterPanel = new JPanel();
         CenterPanel.setBackground(Style.ColorConstants.BGCOLOR);
@@ -2577,8 +2302,6 @@ class Panels {
         JButton addTicket = Style.createButton("Movies");
         JButton cancleTicket = Style.createButton("Cancle Ticket");
         JButton showTicket = Style.createButton("Show History");
-
-        GridBagConstraints g = new GridBagConstraints();
 
         g.gridx = 0;
         g.gridy = 0;
@@ -2607,7 +2330,13 @@ class Panels {
         Home.add(CenterPanel);
 
         JApp.addListener("ActionListener", ProfileLogo, "ProfileLogo", () -> {
-            System.out.println("Heloo");
+            AppData.page_history.push(thisPanelName);
+                       
+                        APP.add("Profile Page",  Panels.UserProfilePanel(APP, list ,OBJ));
+                        componentsMap.put("Profile Page",  Panels.UserProfilePanel(APP, list ,OBJ));
+                
+                       cardLayout.show(APP, "Profile Page");
+
         });
         JApp.addListener("ActionListener", addTicket, "List", () -> {
             AppData.page_history.push(thisPanelName);
@@ -2621,10 +2350,20 @@ class Panels {
 
         });
         JApp.addListener("ActionListener", cancleTicket, "cancleTicket", () -> {
-            System.out.println("Heloo");
+            AppData.page_history.push(thisPanelName);
+                       
+            APP.add("Cancle ticket Page",  Panels.removeTicket(APP,  OBJ, m , cardLayout));
+            componentsMap.put("Cancle ticket Page", Panels.removeTicket(APP,  OBJ, m , cardLayout));
+    
+           cardLayout.show(APP, "Cancle ticket Page");
         });
         JApp.addListener("ActionListener", showTicket, "showTicket", () -> {
-            System.out.println("Heloo");
+            AppData.page_history.push(thisPanelName);
+                       
+            APP.add("Show all ticket Page",  Panels.ShowAllTicketforUser(APP,  OBJ, m , cardLayout));
+            componentsMap.put("Show all ticket Page", Panels.ShowAllTicketforUser(APP,  OBJ, m , cardLayout));
+    
+           cardLayout.show(APP, "Show all ticket Page");
         });
 
         return Home;
@@ -2722,8 +2461,7 @@ class Panels {
 
     static List<JButton> selectedSeats = new ArrayList<>();  // Track selected seats
 
-
-    public static JPanel SeatPanel(JPanel APP, LinkedList<Movies> movieList , JButton[] SEATS , Movies movie , User obj , CardLayout Layout) {
+    public static JPanel SeatPanel(JPanel APP, LinkedList<Movies> movieList, JButton[] SEATS, Movies movie, User obj, CardLayout Layout) {
         int i = 0;
     
         JButton proceed = Style.createButton(String.format("Pay Rs %.2f", Panels.selectedMoviePrice));
@@ -2767,7 +2505,7 @@ class Panels {
         g.fill = GridBagConstraints.HORIZONTAL;
         g.insets = new Insets(4, 10, 100, 10);
         JPanel seatarrangment = new JPanel();
-        centerPanel.add(seatarrangment,g);
+        centerPanel.add(seatarrangment, g);
     
         g.gridx = 0;
         g.gridy = 2;
@@ -2778,34 +2516,29 @@ class Panels {
         Display.setBackground(Style.ColorConstants.BGCOLOR);
         JLabel l = new JLabel(new ImageIcon("Movie-Booking-System/Img/display.png"));
         Display.add(l);
-        centerPanel.add(Display,g);
+        centerPanel.add(Display, g);
     
         seatarrangment.setBackground(Style.ColorConstants.BGCOLOR);
         seatarrangment.setLayout(new GridLayout(5, 5, 20, 20));
     
         // Initialize the seat buttons array before using it
-        JButton[] seats = new JButton[25];  
-    
+        JButton[] seats = movie.SEATS;
     
         for (i = seats.length; i >= 1; i--) {
             seats[i - 1] = new JButton(String.valueOf(i)); // Initialize the button here
     
-            if (movie.seatStates[i-1]) {
+            if (movie.seatStates[i - 1]) {
                 // Seat is taken (already selected)
-                seats[i-1].setEnabled(false);
-                seats[i-1].setBackground(Color.GRAY);
-                
-         
-               
+                seats[i - 1].setEnabled(false);
+                seats[i - 1].setBackground(Color.GRAY);
             } else {
                 // Seat is available
-                seats[i-1].setBackground(Color.WHITE);
+                seats[i - 1].setBackground(Color.WHITE);
             }
-
-        
-            seats[i-1].setPreferredSize(new Dimension(60,60));
     
-            seats[i-1].addActionListener(new ActionListener() {
+            seats[i - 1].setPreferredSize(new Dimension(60, 60));
+    
+            seats[i - 1].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     bottom.setVisible(false);
                     seatsPanel.remove(bottom);
@@ -2814,29 +2547,32 @@ class Panels {
                     JButton selectedButton = (JButton) e.getSource();
     
                     if (selectedButton.getBackground() == Color.GREEN) {
+                      
                         selectedButton.setBackground(Color.WHITE);
-    
                         double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
-                        PRICE -= Panels.selectedMoviePrice;  // Deduct the price of the movie
+                        PRICE -= Panels.selectedMoviePrice; 
                         proceed.setText(String.format("Pay Rs %.2f", PRICE));
     
-                        selectedSeats.remove(selectedButton);  // Remove the deselected button from the list
+                        selectedSeats.remove(selectedButton);  
                         movie.seatStates[Integer.parseInt(selectedButton.getText()) - 1] = false;  // Mark seat as available
                     } else {
-                        selectedButton.setBackground(Color.GREEN);
+                        // Check if 3 seats are selected
+                        if (selectedSeats.size() < 3) {
+                            selectedButton.setBackground(Color.GREEN);
+                            double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
+                            PRICE += Panels.selectedMoviePrice;  
+                            proceed.setText(String.format("Pay Rs %.2f", PRICE));
     
-                        double PRICE = Double.parseDouble(proceed.getText().replaceAll("[^\\d.]", ""));
-                        PRICE += Panels.selectedMoviePrice;  // Add the price of the movie
-                        proceed.setText(String.format("Pay Rs %.2f", PRICE));
-    
-                        selectedSeats.add(selectedButton);  // Add the selected button to the list
-                        
-                        
+                            selectedSeats.add(selectedButton);
+                        } else {
+                          
+                            JOptionPane.showMessageDialog(seatsPanel, "You can only select up to 3 seats.");
+                        }
                     }
                 }
             });
     
-            seatarrangment.add(seats[i-1]);
+            seatarrangment.add(seats[i - 1]);
         }
     
         seatsPanel.add(centerPanel);
@@ -2846,16 +2582,12 @@ class Panels {
         seatsPanel.add(selectedseat, "South");
     
         JApp.addListener("ActionListener", proceed, "click", () -> {
-
             AppData.page_history.push(thisPanelName);
-                       
-            APP.add("ticket Page",  Panels.TicketGenerationPanel(APP,movie, obj, selectedSeats  , cardLayout));
-            componentsMap.put("ticket Page",  Panels.TicketGenerationPanel(APP,movie, obj, selectedSeats , cardLayout));
-    
-           cardLayout.show(APP, "ticket Page");
-
+            APP.add("ticket Page", Panels.TicketGenerationPanel(APP, movie, obj, selectedSeats, cardLayout));
+            componentsMap.put("ticket Page", Panels.TicketGenerationPanel(APP, movie, obj, selectedSeats, cardLayout));
+            cardLayout.show(APP, "ticket Page");
         });
- 
+    
         JLabel Available = new JLabel("Available");
         JLabel Disable = new JLabel("Disabled");
         JLabel selected = new JLabel("Selected");
@@ -2865,13 +2597,20 @@ class Panels {
     
         return seatsPanel;
     }
-
     
     public static JPanel TicketGenerationPanel(JPanel APP, Movies movie , User obj ,  List<JButton> selectedSeats  , CardLayout Layout ){
 
         JPanel TicektPanel = new JPanel(new BorderLayout());
 
         TicektPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        List<Integer> selectedSeatNumbers = new ArrayList<>();
+        for (JButton seat : selectedSeats) {
+            
+            selectedSeatNumbers.add(Integer.parseInt(seat.getText()));
+        }
+        Collections.sort(selectedSeatNumbers);
+        String seatText = selectedSeatNumbers.toString().replace("[", "").replace("]", ""); // Remove brackets
+
 
         JLabel TheaterName = new JLabel("INOX",JApp.fitImage("Movie-Booking-System/Img/inox logo.png", 70, 70),JLabel.CENTER);
        
@@ -3003,7 +2742,7 @@ class Panels {
                     right.add(Seates);
 
                  
-                    JLabel SeatsName = new JLabel("RR - H1 , H2",JLabel.CENTER);
+                    JLabel SeatsName = new JLabel(seatText,JLabel.CENTER);
                     SeatsName.setFont(new Font("Arial", Font.BOLD, 30));
                     right.add(SeatsName);
 
@@ -3047,34 +2786,30 @@ class Panels {
 
 
         JApp.addListener("ActionListener", confirm, "confirm ticket", () -> {
-            String seatNumbers = "";
+             List<Integer> seatNumbers = new ArrayList<>(); 
             for (JButton selectedSeat : selectedSeats) {
                 selectedSeat.setEnabled(false);
                 selectedSeat.setBackground(Color.GRAY);
-                selectedSeat.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2)); // Change border to white
+                selectedSeat.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2)); 
         
-                // Update the seat state in the Movies object
+              
                 int seatIndex = Integer.parseInt(selectedSeat.getText()) - 1;
                 movie.seatStates[seatIndex] = true;
         
-                // Collect seat numbers for the ticket
-                seatNumbers += selectedSeat.getText() + " ";
+               seatNumbers.add(seatIndex + 1);
             }
         
             // Clear selected seats after booking
             selectedSeats.clear();
         
-            // Create a new ticket
-            Ticket ticket = new Ticket(movie.movie_name, movie.movie_code, "INOX", seatNumbers.trim(),
+         
+            Ticket ticket = new Ticket(movie.movie_name, movie.movie_code, "INOX", seatNumbers,
                                        movie.Movie_date + " " + movie.Time, movie.movie_price);
         
-            // Add the ticket to the user's account
+    
             Ticket.addTicketToUser(obj, ticket);
-        
-            System.out.println("Ticket booked successfully!");
 
-
-         
+            cardLayout.show(APP,"Home Page");
 
         });
         
@@ -3095,14 +2830,331 @@ class Panels {
     }
 
 
+    public static JPanel ShowAllTicketforUser(JPanel APP, User obj , LinkedList<Movies> movieList  , CardLayout Layout ){
+
+        JPanel main = new JPanel(new BorderLayout());
+
+        JPanel center = Panels.ShowAllTicket(APP , movieList ,obj.l,false);
+
+        main.add(center);
+
+        return main;
+    }
+
+
+    public static JPanel removeTicket(JPanel APP, User obj , LinkedList<Movies> movieList  , CardLayout Layout ){
+
+        JPanel centerPanel = new JPanel(new BorderLayout());
+
+        JPanel section = Panels.ShowAllTicket(APP , movieList ,obj.l,true);
+
+        centerPanel.add(section);
+
+        return centerPanel;
+    }
+    
+
+
+    public static JPanel ShowAllTicket(JPanel APP, LinkedList<Movies> movieList  ,LinkedList<Ticket> l , Boolean setMouseListernerOn) {
+       
+        JPanel centerPanel = new JPanel(new BorderLayout());
+    
+     
+        JPanel section = new JPanel(new GridBagLayout());
+        section.setBorder(new EmptyBorder(100, 100, 100, 100));
+        section.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(20, 20, 20, 20); 
+    
+        int colCount = 3; 
+        int currentRow = 0; 
+        int currentCol = 0; 
+    
+        for (Ticket clickedTicket : l) {
+         
+            JPanel innerPanel = new JPanel(new GridBagLayout());
+            innerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 7, 0, Color.RED));
+    
+          
+            g.gridx = 0;
+            g.gridy = 0;
+            g.gridwidth = 1;
+            g.gridheight = 1;
+            g.fill = GridBagConstraints.HORIZONTAL;
+            JLabel movieImg = new JLabel(new ImageIcon("Movie-Booking-System/Img/Avengers.jpeg"));
+            innerPanel.add(movieImg, g);
+    
+       
+            g.gridx = 1;
+            g.gridy = 0;
+            g.gridwidth = 1;
+            g.gridheight = 1;
+            g.fill = GridBagConstraints.HORIZONTAL;
+            JPanel movieDetails = new JPanel(new GridBagLayout());
+            innerPanel.add(movieDetails, g);
+    
+          
+            g.gridx = 0;
+            g.gridy = 0;
+            g.gridwidth = 1;
+            g.gridheight = 1;
+            g.fill = GridBagConstraints.HORIZONTAL;
+            JLabel movieName = new JLabel("Movie name - " + clickedTicket.movieName);
+            movieName.setFont(new Font("Arial", Font.BOLD, 20));
+            movieDetails.add(movieName, g);
+    
+            g.gridy = 1;
+            JLabel movieCode = new JLabel("Movie Code - "+ clickedTicket.movieCode);
+            movieCode.setFont(new Font("Arial", Font.PLAIN, 20));
+            movieDetails.add(movieCode, g);
+    
+            g.gridy = 2;
+            JLabel movieDate = new JLabel("Date - " + clickedTicket.dateTime );
+            movieDate.setFont(new Font("Arial", Font.PLAIN, 20));
+            movieDetails.add(movieDate, g);
+    
+            g.gridy = 3;
+            JLabel moviePrice = new JLabel("Price - "+ clickedTicket.price);
+            moviePrice.setFont(new Font("Arial", Font.PLAIN, 20));
+            movieDetails.add(moviePrice, g);
+    
+       
+            GridBagConstraints gridConstraints = new GridBagConstraints();
+            gridConstraints.gridx = currentCol;
+            gridConstraints.gridy = currentRow;
+            gridConstraints.insets = new Insets(15, 15, 15, 15);
+            gridConstraints.anchor = GridBagConstraints.CENTER;
+            section.add(innerPanel, gridConstraints);
+    
+          
+            currentCol++;
+            if (currentCol == colCount) {
+                currentCol = 0; 
+                currentRow++;
+            }
+
+           if(setMouseListernerOn){JApp.addListener("MouseListener", innerPanel, "CurrentTicket", () -> {
+                int valueSelected = JOptionPane.showConfirmDialog(section, "Click OK to cancel the ticket.", "Ticket Cancellation", JOptionPane.YES_NO_OPTION);
+    
+                        if (valueSelected == JOptionPane.YES_OPTION) {
+                            Iterator<Ticket> iterator = l.iterator();
+                            while (iterator.hasNext()) {
+                                Ticket t = iterator.next();
+                                if (t.equals(clickedTicket)) {
+                                 
+                                    for (Movies m : movieList) {
+                                        if (m.movie_code.equals(t.movieCode)) {
+                                            Movies.resetSeats(t.seatNumbers, m.SEATS, m.seatStates);
+                                            t.seatNumbers.clear();
+                                        }
+                                    }
+                                    
+                                
+                                 
+                                    iterator.remove();  
+                                    section.remove(innerPanel);
+                                   
+                                    
+    
+                                    section.revalidate();
+                                    section.repaint();
+                                    break;
+                                }
+                            }
+                        } else if (valueSelected == JOptionPane.NO_OPTION) {
+            
+                        }
+            });
+}
+        }
+    
+      
+        JScrollPane scrollPane = new JScrollPane(section, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+    
+        return centerPanel;
+    }
+    
+
+
+    public static JPanel ShowAllTicket(JPanel APP) {
+
+        JPanel main = new JPanel();
 
 
 
 
+        return main;
 
 
+    }
+
+    public static JPanel UserProfilePanel(JPanel APP, LinkedList<User> list, User obj) {
+        JPanel profilePanel = new JPanel(new BorderLayout());
+        profilePanel.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        JLabel title = new JLabel("User Profile");
+        title.setFont(new Font("Arial", Font.BOLD, 50));
+        title.setForeground(Color.WHITE);
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        profilePanel.add(title, BorderLayout.NORTH);
+    
+        JPanel infoPanel = new JPanel(new GridLayout(7, 2, 30, 30));
+        infoPanel.setBorder(new EmptyBorder(200, 0, 200, 200));
+        infoPanel.setBackground(Style.ColorConstants.BGCOLOR);
+    
+        JLabel firstNameLabel = new JLabel("First Name:", JLabel.CENTER);
+        firstNameLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        firstNameLabel.setForeground(Color.WHITE);
+        infoPanel.add(firstNameLabel);
+    
+        JTextField firstNameField = new JTextField(obj.First_Name);
+        firstNameField.setFont(new Font("Arial", Font.PLAIN, 40));
+        firstNameField.setEditable(false);
+        infoPanel.add(firstNameField);
+    
+        JLabel lastNameLabel = new JLabel("Last Name:", JLabel.CENTER);
+        lastNameLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        lastNameLabel.setForeground(Color.WHITE);
+        infoPanel.add(lastNameLabel);
+    
+        JTextField lastNameField = new JTextField(obj.Last_Name);
+        lastNameField.setFont(new Font("Arial", Font.PLAIN, 40));
+        lastNameField.setEditable(false);
+        infoPanel.add(lastNameField);
+    
+        JLabel mobileNoLabel = new JLabel("Mobile No:", JLabel.CENTER);
+        mobileNoLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        mobileNoLabel.setForeground(Color.WHITE);
+        infoPanel.add(mobileNoLabel);
+    
+        JTextField mobileNoField = new JTextField(obj.Mobile_No);
+        mobileNoField.setFont(new Font("Arial", Font.PLAIN, 40));
+        mobileNoField.setEditable(false);
+        infoPanel.add(mobileNoField);
+    
+        JLabel usernameLabel = new JLabel("Username:", JLabel.CENTER);
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        usernameLabel.setForeground(Color.WHITE);
+        infoPanel.add(usernameLabel);
+    
+        JTextField usernameField = new JTextField(obj.Username);
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 40));
+        usernameField.setEditable(false);
+        infoPanel.add(usernameField);
+    
+        JLabel emailLabel = new JLabel("Email Address:", JLabel.CENTER);
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        emailLabel.setForeground(Color.WHITE);
+        infoPanel.add(emailLabel);
+    
+        JTextField emailField = new JTextField(obj.EmailAddress);
+        emailField.setFont(new Font("Arial", Font.PLAIN, 40));
+        emailField.setEditable(false);
+        infoPanel.add(emailField);
+
+        JLabel error = new JLabel("Fill all fields");
+        error.setFont(new Font("Arial", Font.PLAIN, 24));
+        error.setForeground(Color.RED);
+        error.setHorizontalAlignment(SwingConstants.CENTER);
+        infoPanel.add(error);
+        error.setVisible(false);
+
+    
+        // Add the info panel to the main profile panel
+        profilePanel.add(infoPanel, BorderLayout.CENTER);
+    
+        // Add Edit and Save buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Style.ColorConstants.BGCOLOR);
+        
+        JButton editButton = Style.createButton("Edit Profile");
+        editButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firstNameField.setEditable(true);
+                lastNameField.setEditable(true);
+                mobileNoField.setEditable(true);
+                usernameField.setEditable(true);
+                emailField.setEditable(true);
+                editButton.setEnabled(false); // Disable edit button
+            }
+        });
+    
+        JButton saveButton = Style.createButton("Save");
+        saveButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              
+                    if (!(usernameField.getText().trim().isEmpty() ||
+                    firstNameField.getText().isEmpty() ||
+                    lastNameField.getText().isEmpty() ||
+                    emailField.getText().isEmpty()|| mobileNoField.getText().isEmpty() )) {
+                        if (User.isUserExists(list, usernameField.getText())) {
+                            error.setText("Username already exists");
+                            error.setVisible(true);
+                        } else if (usernameField.getText().trim().equals("ADMIN") || usernameField.getText().trim().equals("Admin")
+                                || usernameField.getText().equals("admin")) {
+                            error.setText("cant set username to " + usernameField.getText().trim());
+                            error.setVisible(true);
+                        }else if (JApp.containsDigit(firstNameField.getText().trim()) || JApp
+                                .containsDigit(lastNameField.getText().trim())) {
+                            error.setText("can't enter numbers in the name field");
+                            error.setVisible(true);
+    
+                        } else if (!User.isEmail(emailField.getText())) {
+                            error.setText("Enter valid email address");
+                            error.setVisible(true);
+                        } else if (mobileNoField.getText().length() != 10 || !mobileNoField.getText().matches("\\d{10}")) {
+                            error.setText("Enter a valid mobile number (e.g., 9665743902)");
+                            error.setVisible(true);
+                        }else {
+                          
+                            obj.Username = usernameField.getText().trim();
+                            obj.First_Name = firstNameField.getText();
+                            obj.Last_Name = lastNameField.getText();
+                            obj.EmailAddress = emailField.getText();
+                            obj.Mobile_No = mobileNoField.getText();
+    
+
+                            error.setVisible(false);
+
+                            
+                     
+                            firstNameField.setEditable(false);
+                            lastNameField.setEditable(false);
+                            mobileNoField.setEditable(false);
+                            usernameField.setEditable(false);
+                            emailField.setEditable(false);
+                            
+                            editButton.setEnabled(true);
+
+                            JOptionPane.showMessageDialog(APP, "Profile Updated successfully", "Profile Updation", JOptionPane.INFORMATION_MESSAGE);
+                        }
+    
+                    } else {
+                        error.setVisible(true);
+                    }
+                
+                
 
 
+            }
+        });
+    
+        buttonPanel.add(editButton);
+        buttonPanel.add(saveButton);
+        
+        profilePanel.add(buttonPanel, BorderLayout.SOUTH);
+    
+        return profilePanel;
+    }
+    
 
 }
 
@@ -3129,12 +3181,6 @@ public class App2 extends JFrame {
         LinkedList<User> list = AppData.fetchUserLinkedList();
        
 // dummy
-
-        m.add(new Movies("pppppp", "1010", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
-        m.add(new Movies("bbbbbbbbb", "1020", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
-        m.add(new Movies("ccccccccc", "1030", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
-        m.add(new Movies("ddddddddd", "1040", "12/12/12", "12:12", 12, "Movie-Booking-System/Img/Avengers.jpeg"));
-
 
 
 
